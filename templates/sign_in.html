@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+        .margin {
+            display: grid;
+            margin-top : 20px;
+            margin-bottom : 20px;
+            grid-template-columns: 1fr 1fr;
+        }
+        .marginNav {
+            display: grid;
+            margin:20px;
+            grid-template-columns: 1fr 1fr;
+        }
+        .widthSetter {
+            width: 32%;
+        }
+        .center2 {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .center {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            top: 130px;
+
+        }
+        .marginBottom {
+            margin-bottom: 10px;
+        }
+        .marginBottomSignIn {
+            margin-bottom: 13px;
+        }
+        .start {
+            justify-self: start;
+        }
+        .button.is-light {
+            background-color: #e7e7e7;
+        }
+    </style>
+    <script>
+        window.post = function(url, data) {
+          return fetch(url, {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+        }
+        function setCookie(cname, cvalue, exdays) {
+          const d = new Date();
+          d.setTime(d.getTime() + (exdays*24*60*60*1000));
+          let expires = "expires="+ d.toUTCString();
+          document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        function sign_in() {
+            let username = document.querySelector('#username').value;
+            let password = document.querySelector('#password').value;
+            data = {"username": username, "password": password};
+            fetch("/get_token", {
+              method: "POST",
+              mode: 'cors',
+              headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+              body: JSON.stringify(data)
+            }).then(res => res.json())
+              .then(data => {
+                setCookie("token", data["token"], 1)
+                window.location.replace("/");
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="marginNav" id="header">
+    <div class="start">
+       <button class="button is-white">About</button>
+        <button class="button is-white">Help</button>
+    </div>
+</div>
+<div class="center">
+    <div class="widthSetter">
+        <div class="center2"><h1 class="title is-2 marginBottom">Welcome!</h1></div>
+        <input class="input margin" id="username" type="text" name="search" placeholder="Username"/>
+        <input class="input margin" id="password" type="password" name="search" placeholder="Password">
+        <button class="center2 button marginBottomSignIn is-dark" onclick="sign_in()">Sign in</button>
+        <div class="center2"><h7 class="subtitle is-6 marginBottomSignIn">or</h7></div>
+        <a href="/signUp"><button class="widthSetter button is-light center2">Sign up</button></a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MathJax TeX Test Page</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="module">
+        import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
+        customElements.define("latex-js", LaTeXJSComponent)
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+        .widthSetter {
+            width: 40%;
+        }
+        .center {
+            display: flex;
+            justify-content: center;
+        }
+        .center2 {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .margin {
+            margin-top : 15px;
+            margin-bottom : 15px;
+        }
+        .searchMargin {
+            margin-bottom: 20px;
+        }
+        .marginNav {
+            display: grid;
+            margin : 20px;
+            grid-template-columns: 1fr 1fr;
+        }
+        .end {
+            justify-self: end;
+        }
+        .start {
+            justify-self: start;
+        }
+    </style>
+    <script>
+        function dropdown() {
+            var element = document.getElementById("dropdown");
+            element.classList.toggle("is-active");
+        }
+    </script>
+</head>
+<body>
+<div class="marginNav" id="header">
+    <div class="start">
+       <button class="button is-white">About</button>
+        <button class="button is-white">Help</button>
+    </div>
+        {% if data[1] == "" %}
+            <a href="/signIn" class="end">
+                <button class="button is-dark">Sign in</button>
+            </a>
+        {% else %}
+            <div class="dropdown  is-right end" id="dropdown">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onclick="dropdown()">
+                  <span>{{ data[1] }}</span>
+                  <span class="icon is-small">
+                    <img src="/static/dropdown.png">
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">
+                    Contributions
+                  </a>
+                  <a class="dropdown-item">
+                    Bookmarks
+                  </a>
+                </div>
+              </div>
+            </div>
+        {% endif %}
+
+</div>
+    <div class="center searchMargin">
+        <form class="widthSetter" action="/results" method="POST">
+            <div class="center2"><img src="/static/tau2.png" width=100px height=100px></div>
+            <input class="input margin" type="text" name="search" placeholder="Search">
+        </form>
+    </div>
+    <div class="center">
+        <div class="columns widthSetter is-multiline">
+        {% for question in data[0] %}
+            <div class="column is-12">
+                <div class="box">
+                    <div class="content">
+                         <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/">
+                        {{question[1] | safe}}
+                         </latex-js>
+                     </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

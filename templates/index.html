@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MathJax TeX Test Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script type="module">
+        import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
+        customElements.define("latex-js", LaTeXJSComponent)
+    </script>
+    <style>
+        .widthSetter {
+            width: 40%;
+        }
+        @media only screen and (max-width: 1000px) {
+          .widthSetter {
+            width: 75%;
+        }
+        }
+        .marginNav {
+            display: grid;
+            margin : 20px;
+            grid-template-columns: 1fr 1fr;
+        }
+        .center {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            top: 200px;
+
+        }
+        .center2 {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .margin {
+            margin-top : 20px;
+            margin-bottom : 20px;
+        }
+        .end {
+            justify-self: end;
+        }
+        .start {
+            justify-self: start;
+        }
+    </style>
+    <script>
+        function dropdown() {
+            var element = document.getElementById("dropdown");
+            element.classList.toggle("is-active");
+        }
+    </script>
+</head>
+<body>
+<div class="marginNav" id="header">
+    <div class="start">
+       <button class="button is-white">About</button>
+        <button class="button is-white">Help</button>
+    </div>
+        {% if data[0] == "" %}
+            <a href="/signIn" class="end">
+                <button class="button is-dark">Sign in</button>
+            </a>
+        {% else %}
+            <div class="dropdown  is-right end" id="dropdown">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onclick="dropdown()">
+                  <span>{{ data[0] }}</span>
+                  <span class="icon is-small">
+                    <img src="/static/dropdown.png">
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">
+                    Contributions
+                  </a>
+                  <a class="dropdown-item">
+                    Bookmarks
+                  </a>
+                </div>
+              </div>
+            </div>
+        {% endif %}
+
+</div>
+<div class="center">
+    <form class="widthSetter" action="/results" method="POST">
+    <div class="center2"><img src="/static/tau2.png" width=100px height=100px></div>
+    <input class="input margin" type="text" name="search" placeholder="Search for questions">
+</form>
+</div>
+</body>
+</html>
