@@ -42,21 +42,21 @@ def resultsPage():
     data = ()
     string = "SELECT * from Question WHERE "
     substring = 0
-    while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
+    """while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
         string = string + "processed_question LIKE ? OR "
         data = data + ("%" + search[substring] + "%",)
-        substring += 1
+        substring += 1"""
     for i in range(0, len(search)):
         registerData = False
         if search[i] == "-t":
             data = data + (search[i + 1],)
-            string = string + "TOPIC = ? AND "
+            string = string + "'topic' = ? AND "
         elif search[i] == "-d":
             data = data + (search[i + 1],)
-            string = string + "DIFFICULTY = ? AND "
+            string = string + "'difficulty' = ? AND "
         elif search[i] == "-y":
             data = data + (int(search[i + 1]),)
-            string = string + "YEAR = ? AND "
+            string = string + "'year' = ? AND "
     sqlData = data
     database = sqlite3.connect('questions.db')
     cursor = database.cursor()
@@ -69,6 +69,8 @@ def resultsPage():
     details = database.execute(
         "SELECT username FROM Session INNER JOIN User ON Session.userhash = User.userhash WHERE Session.session_token = ?",
         sqlData).fetchone()
+    if details == None:
+        details = ("",)
     #returnData = rapidfuzz.process.extract(data['search'], returnData, limit=20, processor=lambda x: x[0])
     #style results.html
     return render_template('results.html', data=(returnData, details[0]))
