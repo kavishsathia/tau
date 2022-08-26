@@ -89,8 +89,9 @@
         </form>
     </div>
 
-    <div class="center">
+
         {% for hash in data[0] %}
+    <div class="center">
         <script>
             var url = '/static/{{ hash[5] }}.pdf';
 
@@ -137,7 +138,8 @@
         </script>
         <canvas id="{{ hash[5] }}"></canvas>
         <div id="text-layer"></div>
-        {% endfor %}
     </div>
+        {% endfor %}
+
 </body>
 </html>
