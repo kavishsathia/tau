@@ -4,15 +4,17 @@ import json
 import hashlib
 import time
 from flask_cors import CORS
+import subprocess
 
 app = Flask(__name__)
 CORS(app)
 
 class Question():
     def __init__(self, l, index):
-        self.year = int(l[index].split(",")[0])
-        self.difficulty = l[index].split(",")[1]
-        self.topic = l[index].split(",")[2]
+        self.title = l[index].split(",")[0]
+        self.year = int(l[index].split(",")[1])
+        self.difficulty = l[index].split(",")[2]
+        self.topic = l[index].split(",")[3]
         self.question = l[index+1]
 
 def dataProcess(data):
@@ -78,15 +80,24 @@ def uploadPage():
 
 @app.route('/uploadData', methods=['POST', 'GET'])
 def uploadData():
+    token = request.cookies.get("token")
     contents = str(request.files['file'].read(), 'utf-8')
     data = dataProcess(contents)
+    sqlData = (token,)
     database = sqlite3.connect('questions.db')
+    details = database.execute(
+        "SELECT userhash FROM Session WHERE session_token = ?",
+        sqlData).fetchone()
     cursor = database.cursor()
     for datum in data:
-        sqlData = (datum.question, datum.year, datum.difficulty, datum.topic)
-        cursor.execute(f"INSERT INTO Questions (QUESTION, YEAR, "
-                       f"DIFFICULTY, TOPIC) VALUES (?, "
-                       f"?, ?, ?);", sqlData)
+        file = open(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", "w")
+        file.write(datum.question)
+        file.close()
+        log = subprocess.run(f"cd ~/tau/static/; pdflatex {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex")
+        sqlData = (datum.year, datum.difficulty, datum.topic, details[0], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()))
+        cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
+                       f"'topic', 'userhash', 'file_name') VALUES (?, "
+                       f"?, ?, ?, ?);", sqlData)
         print(datum)
     database.commit()
     # redirect instead
