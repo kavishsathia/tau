@@ -40,13 +40,13 @@ def searchPage():
 def resultsPage():
     search = request.form['search'].strip().split(' ')
     data = ()
-    string = "SELECT file_name from Question WHERE "
+    string = "SELECT * from Question;"
     substring = 0
     """while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
         string = string + "processed_question LIKE ? OR "
         data = data + ("%" + search[substring] + "%",)
         substring += 1"""
-    for i in range(0, len(search)):
+    """for i in range(0, len(search)):
         registerData = False
         if search[i] == "-t":
             data = data + (search[i + 1],)
@@ -57,12 +57,11 @@ def resultsPage():
         elif search[i] == "-y":
             data = data + (int(search[i + 1]),)
             string = string + "'year' = ? AND "
-    sqlData = data
+    sqlData = data"""
     database = sqlite3.connect('questions.db')
     cursor = database.cursor()
-    print(string[:-4])
-    print(sqlData)
-    cursor.execute(string[:-4], sqlData)
+    print(string)
+    cursor.execute(string)
     returnData = cursor.fetchall()
     print(returnData)
     token = request.cookies.get("token")
@@ -101,6 +100,8 @@ def uploadData():
         cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
                        f"'topic', 'userhash', 'file_name') VALUES (?, "
                        f"?, ?, ?, ?);", sqlData)
+        cursor.execute("SELECT * from Question")
+        print(cursor.fetchall())
         print(datum)
     database.commit()
     database.close()
