@@ -40,7 +40,7 @@ def searchPage():
 def resultsPage():
     search = request.form['search'].strip().split(' ')
     data = ()
-    string = "SELECT * from Question WHERE "
+    string = "SELECT file_name from Question WHERE "
     substring = 0
     """while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
         string = string + "processed_question LIKE ? OR "
