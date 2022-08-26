@@ -111,12 +111,12 @@
               pdf.getPage(pageNumber).then(function(page) {
                 console.log('Page loaded');
 
-                var scale = 2;
+                var scale = 3;
                 var viewport = page.getViewport({scale: scale});
 
                 // Prepare canvas using PDF page dimensions
                 var canvas = document.getElementById('{{ hash[5] }}');
-                canvas.style.width = "70%";
+                canvas.style.width = "60%";
                 var context = canvas.getContext('2d');
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
@@ -136,7 +136,7 @@
               console.error(reason);
             });
         </script>
-        <canvas id="{{ hash[5] }}"></canvas>
+        <canvas id="{{ hash[5] }}" class="margin"></canvas>
         <div id="text-layer"></div>
     </div>
         {% endfor %}
