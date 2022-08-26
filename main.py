@@ -64,6 +64,7 @@ def resultsPage():
     print(sqlData)
     cursor.execute(string[:-4], sqlData)
     returnData = cursor.fetchall()
+    print(returnData)
     token = request.cookies.get("token")
     sqlData = (token,)
     details = database.execute(
@@ -102,6 +103,7 @@ def uploadData():
                        f"?, ?, ?, ?);", sqlData)
         print(datum)
     database.commit()
+    database.close()
     # redirect instead
     return redirect("/")
 

@@ -92,7 +92,7 @@
     <div class="center">
         {% for hash in data[0] %}
         <script>
-            var url = '/static/{{ hash }}.pdf';
+            var url = '/static/{{ hash[0] }}.pdf';
 
             // Loaded via <script> tag, create shortcut to access PDF.js exports.
             var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -114,7 +114,7 @@
                 var viewport = page.getViewport({scale: scale});
 
                 // Prepare canvas using PDF page dimensions
-                var canvas = document.getElementById('{{ hash }}');
+                var canvas = document.getElementById('{{ hash[0] }}');
                 canvas.style.width = "70%";
                 var context = canvas.getContext('2d');
                 canvas.height = viewport.height;
@@ -135,7 +135,7 @@
               console.error(reason);
             });
         </script>
-        <canvas id="{{ hash }}"></canvas>
+        <canvas id="{{ hash[0] }}"></canvas>
         <div id="text-layer"></div>
         {% endfor %}
     </div>
