@@ -93,7 +93,7 @@ def uploadData():
         file = open(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", "w")
         file.write(datum.question)
         file.close()
-        log = subprocess.run(f"cd ~/tau/static/; pdflatex {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex")
+        log = subprocess.run(f"cd ~/tau/static/; pdflatex {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", shell=True)
         sqlData = (datum.year, datum.difficulty, datum.topic, details[0], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()))
         cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
                        f"'topic', 'userhash', 'file_name') VALUES (?, "
