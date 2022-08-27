@@ -144,7 +144,7 @@ def uploadData():
         file = open(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", "w")
         file.write(datum.question)
         file.close()
-        log = subprocess.run(f"cd ~/tau/static/; pdflatex -halt-on-error {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", shell=True)
+        log = subprocess.run(f"cd ~/tau/static/; pdflatex -halt-on-error -interaction=nonstopmode {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", shell=True)
         if exists(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf"):
             sqlData = (datum.year, datum.difficulty, datum.topic, details[0], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question, 'Success')
             cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
