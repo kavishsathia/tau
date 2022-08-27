@@ -81,15 +81,20 @@ def contributions():
     token = request.cookies.get("token")
     database = sqlite3.connect('questions.db')
     sqlData = (token,)
-    details = database.execute(
+    userhash = database.execute(
         "SELECT userhash FROM Session WHERE session_token = ?",
         sqlData).fetchone()
     contributions = database.execute(
         "SELECT * FROM Question WHERE userhash = ?",
-        details
+        userhash
     ).fetchall()
+    details = database.execute(
+        "SELECT username FROM Session INNER JOIN User ON Session.userhash = User.userhash WHERE Session.session_token = ?",
+        sqlData).fetchone()
+    database.close()
+    if details == None:
+        details = ("",)
     return render_template('contributions.html', data=(contributions, details[0]))
-
 
 @app.route('/upload', methods=['GET'])
 def uploadPage():
@@ -121,7 +126,7 @@ def uploadData():
         file.write(datum.question)
         file.close()
         log = subprocess.run(f"cd ~/tau/static/; pdflatex -halt-on-error {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", shell=True)
-        if exists(f"{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf"):
+        if exists(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf"):
             sqlData = (datum.year, datum.difficulty, datum.topic, details[0], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question, 'Success')
             cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
                            f"'topic', 'userhash', 'file_name', 'title', 'contents', 'status') VALUES (?, "

@@ -98,25 +98,75 @@
             </div>
         {% endif %}
 </div>
-<div class="margin">
-    <h1 class="title">Contributions</h1>
-    <h1 class="subtitle is-6">This page shows a list of your questions along with their statuses</h1>
-    <table class="table is-hoverable is-fullwidth">
-      <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Status</th>
-        </tr>
-      </thead>
-        {% for question in data[0] %}
-        <tr>
-            <th>{{ question[0] }}</th>
-            <td>{{ question[6] }}</td>
-            <td>{{ question[8] }}</td>
-        </tr>
-        {% endfor %}
-    <table>
+{% for hash in data[0] %}
+    <div class="center">
+        {% if hash[8] == "Success" %}
+            <script>
+            var url = '/static/{{ hash[5] }}.pdf';
+
+            // Loaded via <script> tag, create shortcut to access PDF.js exports.
+            var pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+            // The workerSrc property shall be specified.
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+            // Asynchronous download of PDF
+            var loadingTask = pdfjsLib.getDocument(url);
+            loadingTask.promise.then(function(pdf) {
+              console.log('PDF loaded');
+
+              // Fetch the first page
+              var pageNumber = 1;
+              pdf.getPage(pageNumber).then(function(page) {
+                console.log('Page loaded');
+
+                var scale = 3;
+                var viewport = page.getViewport({scale: scale});
+
+                // Prepare canvas using PDF page dimensions
+                var canvas = document.getElementById('{{ hash[5] }}');
+                canvas.style.width = "100%";
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Render PDF page into canvas context
+                var renderContext = {
+                  canvasContext: context,
+                  viewport: viewport
+                };
+                var renderTask = page.render(renderContext);
+                renderTask.promise.then(function () {
+                  console.log('Page rendered');
+                });
+              });
+            }, function (reason) {
+              // PDF loading error
+              console.error(reason);
+            });
+        </script>
+            {% else %}
+            {% endif %}
+        <div class="box grid">
+            <div class="margintitle">
+                <div class="start">
+                    <h1 class="title">{{ hash[6] }}</h1>
+                    {% if hash[8] == "Error" %}
+                    <h1 class="subtitle is-6">There was an error in the compilation of you TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
+                    {% else %}
+                    {% endif %}
+                </div>
+                <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex" class="end">
+                    <button class="button is-dark ">Open in Overleaf</button>
+                </a>
+            </div>
+            {% if hash[8] == "Success" %}
+            <canvas id="{{ hash[5] }}" class="canvasmargins"></canvas>
+            {% else %}
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
 </div>
 
 
