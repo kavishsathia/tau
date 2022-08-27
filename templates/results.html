@@ -10,6 +10,14 @@
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <style>
+        .box {
+            padding: 40px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            width: 70%;
+        }
         .widthSetter {
             width: 40%;
         }
@@ -25,6 +33,11 @@
         .margin {
             margin-top : 15px;
             margin-bottom : 15px;
+        }
+        .canvasmargin {
+            margin-top : 15px;
+            margin-bottom : 15px;
+            justify-self: center;
         }
         .searchMargin {
             margin-bottom: 20px;
@@ -80,17 +93,15 @@
               </div>
             </div>
         {% endif %}
-
 </div>
-    <div class="center searchMargin">
+<div class="center searchMargin">
         <form class="widthSetter" action="/results" method="POST">
             <div class="center2"><img src="/static/tau2.png" width=100px height=100px></div>
             <input class="input margin" type="text" name="search" placeholder="Search">
         </form>
     </div>
 
-
-        {% for hash in data[0] %}
+{% for hash in data[0] %}
     <div class="center">
         <script>
             var url = '/static/{{ hash[5] }}.pdf';
@@ -116,7 +127,7 @@
 
                 // Prepare canvas using PDF page dimensions
                 var canvas = document.getElementById('{{ hash[5] }}');
-                canvas.style.width = "60%";
+                canvas.style.width = "100%";
                 var context = canvas.getContext('2d');
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
@@ -136,11 +147,20 @@
               console.error(reason);
             });
         </script>
-        <div class="box">
-            <canvas id="{{ hash[5] }}" class="margin"></canvas>
+        <div class="box grid">
+            <div class="marginNav">
+                <div class="start">
+                    <h1 class="title">{{ hash[3] }}</h1>
+                </div>
+                <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex" class="end">
+                    <button class="button is-dark ">Open in Overleaf</button>
+                </a>
+            </div>
+            <canvas id="{{ hash[5] }}" class="canvasmargins"></canvas>
         </div>
     </div>
-        {% endfor %}
+{% endfor %}
+
 
 </body>
 </html>
