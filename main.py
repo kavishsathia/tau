@@ -44,27 +44,27 @@ def resultsPage():
     regex = r".*"
     search = request.form['search'].strip().split(" ")
     data = ()
-    string = "SELECT * from Question WHERE 1 = 1 AND "
+    string = "SELECT * from Question WHERE "
     query = ""
     substring = 0
     while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
-        query = query + " " + search[substring]
+        query = query + search[substring] + " "
         substring += 1
-    string = string + "'contents' = ? AND "
-    data = data + ("%" + query + "%",)
+    string = string + "contents LIKE ? AND "
+    data = data + ("%" + query.strip() + "%",)
     register = ""
     for i in range(0, len(search)):
         if search[i] in  ["-t", "-d", "-y"]:
             register = search[i]
         elif register == "-t":
             data = data + ("%" + search[i] + "%",)
-            string = string + "'topic' = ? AND "
+            string = string + "topic LIKE ? AND "
         elif register == "-d":
             data = data + ("%" + search[i] + "%",)
-            string = string + "'difficulty' = ? AND "
+            string = string + "difficulty LIKE ? AND "
         elif register == "-y":
             data = data + (int(search[i]),)
-            string = string + "'year' = ? AND "
+            string = string + "year = ? AND "
     database = sqlite3.connect('questions.db')
     cursor = database.cursor()
     print(string[:-4])
