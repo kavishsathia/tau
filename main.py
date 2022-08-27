@@ -50,6 +50,8 @@ def resultsPage():
     while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
         query = query + " " + search[substring]
         substring += 1
+    string = string + "'contents' = ? AND "
+    data = data + ("%" + query + "%",)
     register = ""
     for i in range(0, len(search)):
         if search[i] in  ["-t", "-d", "-y"]:
@@ -78,8 +80,6 @@ def resultsPage():
         sqlData).fetchone()
     if details == None:
         details = ("",)
-    if len(returnData) > 0:
-        returnData = rapidfuzz.process.extract(query, returnData, limit=20, processor=lambda x: x[7])
     #style results.html
     return render_template('results.html', data=(returnData, details[0]))
 
