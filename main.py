@@ -7,6 +7,7 @@ from flask_cors import CORS
 import subprocess
 from os.path import exists
 from os import remove
+import rapidfuzz
 
 app = Flask(__name__)
 CORS(app)
@@ -40,30 +41,34 @@ def searchPage():
 
 @app.route('/results', methods=['POST', 'GET'])
 def resultsPage():
-    search = request.form['search'].strip().split(' ')
+    regex = r".*"
+    search = request.form['search'].strip().split(" ")
     data = ()
-    string = "SELECT * from Question;"
+    string = "SELECT * from Question WHERE 1 = 1 AND "
+    query = ""
     substring = 0
-    """while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
-        string = string + "processed_question LIKE ? OR "
-        data = data + ("%" + search[substring] + "%",)
-        substring += 1"""
-    """for i in range(0, len(search)):
-        registerData = False
-        if search[i] == "-t":
-            data = data + (search[i + 1],)
+    while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
+        query = query + " " + search[substring]
+        substring += 1
+    register = ""
+    for i in range(0, len(search)):
+        if search[i] in  ["-t", "-d", "-y"]:
+            register = search[i]
+        elif register == "-t":
+            data = data + ("%" + search[i] + "%",)
             string = string + "'topic' = ? AND "
-        elif search[i] == "-d":
-            data = data + (search[i + 1],)
+        elif register == "-d":
+            data = data + ("%" + search[i] + "%",)
             string = string + "'difficulty' = ? AND "
-        elif search[i] == "-y":
-            data = data + (int(search[i + 1]),)
+        elif register == "-y":
+            data = data + (int(search[i]),)
             string = string + "'year' = ? AND "
-    sqlData = data"""
     database = sqlite3.connect('questions.db')
     cursor = database.cursor()
-    print(string)
-    cursor.execute(string)
+    print(string[:-4])
+    print(query)
+    print(data)
+    cursor.execute(string[:-4], data)
     returnData = cursor.fetchall()
     print(returnData)
     token = request.cookies.get("token")
@@ -73,7 +78,8 @@ def resultsPage():
         sqlData).fetchone()
     if details == None:
         details = ("",)
-    #returnData = rapidfuzz.process.extract(data['search'], returnData, limit=20, processor=lambda x: x[0])
+    if len(returnData) > 0:
+        returnData = rapidfuzz.process.extract(query, returnData, limit=20, processor=lambda x: x[7])
     #style results.html
     return render_template('results.html', data=(returnData, details[0]))
 
