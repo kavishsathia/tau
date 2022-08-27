@@ -79,6 +79,8 @@ def resultsPage():
 @app.route('/contributions', methods=['GET'])
 def contributions():
     token = request.cookies.get("token")
+    if token == None:
+        return redirect("/signIn")
     database = sqlite3.connect('questions.db')
     sqlData = (token,)
     userhash = database.execute(
@@ -115,6 +117,8 @@ def delete():
 def uploadPage():
     # style upload.html
     token = request.cookies.get("token")
+    if token == None:
+        return redirect("/signIn")
     database = sqlite3.connect('questions.db')
     sqlData = (token,)
     details = database.execute(
@@ -162,7 +166,7 @@ def uploadData():
     database.commit()
     database.close()
     # redirect instead
-    return redirect("/")
+    return redirect("/contributions")
 
 @app.route('/getDetails', methods=['POST', 'GET'])
 def getDetails():
