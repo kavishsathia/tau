@@ -10,6 +10,9 @@
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <style>
+        .icon-margin {
+            margin-right: 10px;
+        }
         .box {
             padding: 80px;
             margin: 10px;
@@ -53,6 +56,7 @@
         }
         .end {
             justify-self: end;
+            display: flex;
         }
         .start {
             justify-self: start;
@@ -152,13 +156,18 @@
                 <div class="start">
                     <h1 class="title">{{ hash[6] }}</h1>
                     {% if hash[8] == "Error" %}
-                    <h1 class="subtitle is-6">There was an error in the compilation of you TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
+                    <h1 class="subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
                     {% else %}
                     {% endif %}
                 </div>
-                <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex" class="end">
-                    <button class="button is-dark ">Open in Overleaf</button>
-                </a>
+                <div class="end">
+                    <form action="/delete" method="POST" class="icon-margin">
+                        <button class="button is-danger is-light" name="delete" value="{{ hash[0] }}">Delete</button>
+                    </form>
+                    <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex">
+                        <button class="button is-dark ">Open in Overleaf</button>
+                    </a>
+                </div>
             </div>
             {% if hash[8] == "Success" %}
             <canvas id="{{ hash[5] }}" class="canvasmargins"></canvas>

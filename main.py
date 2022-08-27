@@ -96,6 +96,21 @@ def contributions():
         details = ("",)
     return render_template('contributions.html', data=(contributions, details[0]))
 
+@app.route('/delete', methods=['POST'])
+def delete():
+    token = request.cookies.get("token")
+    id = request.form.get("delete")
+    database = sqlite3.connect('questions.db')
+    sqlData = (token,)
+    userhash = database.execute(
+        "SELECT userhash FROM Session WHERE session_token = ?",
+        sqlData).fetchone()
+    sqlData = (id, userhash[0])
+    database.execute("DELETE FROM Question WHERE id = ? AND userhash = ?", sqlData)
+    database.commit()
+    database.close()
+    return redirect("/contributions")
+
 @app.route('/upload', methods=['GET'])
 def uploadPage():
     # style upload.html
