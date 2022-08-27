@@ -92,8 +92,9 @@
         <div class="center2">
             <h1 class="subtitle is-6">Make sure to include \usepackages[active,tightpages]{preview} in your preamble and to add all your code in the preview environment</h1>
         </div>
+        <form action="/uploadData" method="POST" enctype="multipart/form-data">
         <div class="center2">
-            <form action="/uploadData" method="POST" enctype="multipart/form-data">
+
                 <div class="file has-name is-boxed">
                   <label class="file-label">
                     <input id="file-input" class="file-input" type="file" name="resume" onchange="getFileName()">
@@ -106,11 +107,12 @@
                     </span>
                   </label>
             </div>
-        </form>
+
         </div>
         <div class="center2">
             <button class="button">Submit</button>
         </div>
+            </form>
     </div>
 </div>
 </body>
