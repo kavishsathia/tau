@@ -5,6 +5,7 @@ import hashlib
 import time
 from flask_cors import CORS
 import subprocess
+from os.path import exists
 
 app = Flask(__name__)
 CORS(app)
@@ -81,7 +82,7 @@ def contributions():
     database = sqlite3.connect('questions.db')
     sqlData = (token,)
     details = database.execute(
-        "SELECT username FROM Session INNER JOIN User ON Session.userhash = User.userhash WHERE Session.`session_token` = ?",
+        "SELECT userhash FROM Session WHERE session_token = ?",
         sqlData).fetchone()
     contributions = database.execute(
         "SELECT * FROM Question WHERE userhash = ?",
@@ -119,14 +120,25 @@ def uploadData():
         file = open(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", "w")
         file.write(datum.question)
         file.close()
-        log = subprocess.run(f"cd ~/tau/static/; pdflatex {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", shell=True)
-        sqlData = (datum.year, datum.difficulty, datum.topic, details[0], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()))
-        cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
-                       f"'topic', 'userhash', 'file_name') VALUES (?, "
-                       f"?, ?, ?, ?);", sqlData)
-        cursor.execute("SELECT * from Question")
-        print(cursor.fetchall())
-        print(datum)
+        log = subprocess.run(f"cd ~/tau/static/; pdflatex -halt-on-error {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", shell=True)
+        if exists(f"{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf"):
+            sqlData = (datum.year, datum.difficulty, datum.topic, details[0], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question, 'Success')
+            cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
+                           f"'topic', 'userhash', 'file_name', 'title', 'contents', 'status') VALUES (?, "
+                           f"?, ?, ?, ?, ?, ?, ?);", sqlData)
+            cursor.execute("SELECT * from Question")
+            print(cursor.fetchall())
+            print(datum)
+        else:
+            sqlData = (datum.year, datum.difficulty, datum.topic, details[0],
+                       str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question,
+                       'Error')
+            cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
+                           f"'topic', 'userhash', 'file_name', 'title', 'contents', 'status') VALUES (?, "
+                           f"?, ?, ?, ?, ?, ?, ?);", sqlData)
+            cursor.execute("SELECT * from Question")
+            print(cursor.fetchall())
+            print(datum)
     database.commit()
     database.close()
     # redirect instead
