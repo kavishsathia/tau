@@ -11,21 +11,104 @@
     <script type="text/javascript" id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
     </script>
+    <style>
+    .widthSetter {
+            width: 40%;
+        }
+        .marginNav {
+            display: grid;
+            margin : 20px;
+            grid-template-columns: 1fr 1fr;
+        }
+        .end {
+            justify-self: end;
+        }
+        .start {
+            justify-self: start;
+        }
+        .center {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            top: 200px;
+        }
+        .grid {
+            display: grid;
+        }
+        .center2 {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+    </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script>
+        function getFileName() {
+            value = document.getElementById("file-input").files[0].name;
+            document.getElementById("file-name").innerHTML = value;
+        }
+    </script>
 </head>
 <body>
-    <form action="/uploadData" method="POST" enctype="multipart/form-data">
-        <div class="file is-boxed">
-          <label class="file-label">
-            <input class="file-input" type="file" name="file">
-            <span class="file-cta">
-              <span class="file-label">
-                Choose a file…
-              </span>
-            </span>
-          </label>
+<div class="marginNav" id="header">
+    <div class="start">
+       <button class="button is-white">About</button>
+        <button class="button is-white">Help</button>
+    </div>
+        {% if data[0] == "" %}
+            <a href="/signIn" class="end">
+                <button class="button is-dark">Sign in</button>
+            </a>
+        {% else %}
+            <div class="dropdown  is-right end" id="dropdown">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onclick="dropdown()">
+                  <span>{{ data[0] }}</span>
+                  <span class="icon is-small">
+                    <img src="/static/dropdown.png">
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">
+                    Contributions
+                  </a>
+                  <a class="dropdown-item">
+                    Bookmarks
+                  </a>
+                </div>
+              </div>
+            </div>
+        {% endif %}
+</div>
+<div class="center">
+    <div class="widthSetter">
+        <div class="center2">
+            <h1 class="title">Upload</h1>
         </div>
-        <input type="submit"/>
+        <div class="center2">
+            <h1 class="subtitle is-6">Make sure to include \usepackages[active,tightpages]{preview} in your preamble and to add all your code in the preview environment</h1>
+        </div>
+        <div class="center2">
+            <form action="/uploadData" method="POST" enctype="multipart/form-data">
+            <div class="file has-name is-boxed">
+              <label class="file-label">
+                <input id="file-input" class="file-input" type="file" name="resume" onchange="getFileName()">
+                <span class="file-cta">
+                  <span class="file-label">
+                    Choose a file…
+                  </span>
+                </span>
+                <span class="file-name" id="file-name">
+                </span>
+              </label>
+            </div>
     </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

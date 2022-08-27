@@ -2,32 +2,29 @@
 <html>
 <head>
     <title>MathJax TeX Test Page</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script type="module">
         import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
         customElements.define("latex-js", LaTeXJSComponent)
     </script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <style>
+        .box {
+            padding: 80px;
+            margin: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            width: 70%;
+        }
         .widthSetter {
             width: 40%;
         }
-        @media only screen and (max-width: 1000px) {
-          .widthSetter {
-            width: 75%;
-        }
-        }
-        .marginNav {
-            display: grid;
-            margin : 20px;
-            grid-template-columns: 1fr 1fr;
-        }
         .center {
-            height: 100vh;
             display: flex;
             justify-content: center;
-            position: relative;
-            top: 200px;
-
         }
         .center2 {
             width: 100%;
@@ -35,8 +32,24 @@
             justify-content: center;
         }
         .margin {
-            margin-top : 20px;
-            margin-bottom : 20px;
+            margin: 34px;
+        }
+        .canvasmargin {
+            margin-top : 15px;
+            margin-bottom : 15px;
+            justify-self: center;
+        }
+        .searchMargin {
+            margin-bottom: 20px;
+        }
+        .marginNav {
+            display: grid;
+            margin : 20px;
+            grid-template-columns: 1fr 1fr;
+        }
+        .margintitle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
         }
         .end {
             justify-self: end;
@@ -58,7 +71,7 @@
        <button class="button is-white">About</button>
         <button class="button is-white">Help</button>
     </div>
-        {% if data[0] == "" %}
+        {% if data[1] == "" %}
             <a href="/signIn" class="end">
                 <button class="button is-dark">Sign in</button>
             </a>
@@ -66,7 +79,7 @@
             <div class="dropdown  is-right end" id="dropdown">
               <div class="dropdown-trigger">
                 <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onclick="dropdown()">
-                  <span>{{ data[0] }}</span>
+                  <span>{{ data[1] }}</span>
                   <span class="icon is-small">
                     <img src="/static/dropdown.png">
                   </span>
@@ -84,13 +97,31 @@
               </div>
             </div>
         {% endif %}
+</div>
+<div class="margin">
+    <h1 class="title">Contributions</h1>
+    <h1 class="subtitle is-6">This page shows a list of your questions along with their statuses</h1>
+    <table class="table is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Status</th>
+        </tr>
+      </thead>
+        {% for question in data[0] %}
+        <tr>
+            <th>{{ question[0] }}</th>
+            <td>{{ question[3] }}</td>
+            <td>Status</td>
+        </tr>
+        {% endfor %}
+    <table>
+</div>
 
-</div>
-<div class="center">
-    <form class="widthSetter" action="/results" method="POST">
-    <div class="center2"><img src="/static/tau2.png" width=100px height=100px></div>
-    <input class="input margin" type="text" name="search" placeholder="Search for questions">
-    </form>
-</div>
+
+
+
+
 </body>
 </html>

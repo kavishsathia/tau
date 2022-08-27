@@ -75,10 +75,34 @@ def resultsPage():
     #style results.html
     return render_template('results.html', data=(returnData, details[0]))
 
+@app.route('/contributions', methods=['GET'])
+def contributions():
+    token = request.cookies.get("token")
+    database = sqlite3.connect('questions.db')
+    sqlData = (token,)
+    details = database.execute(
+        "SELECT username FROM Session INNER JOIN User ON Session.userhash = User.userhash WHERE Session.`session_token` = ?",
+        sqlData).fetchone()
+    contributions = database.execute(
+        "SELECT * FROM Question WHERE userhash = ?",
+        details
+    ).fetchall()
+    return render_template('contributions.html', data=(contributions, details[0]))
+
+
 @app.route('/upload', methods=['GET'])
 def uploadPage():
     # style upload.html
-    return render_template('upload.html')
+    token = request.cookies.get("token")
+    database = sqlite3.connect('questions.db')
+    sqlData = (token,)
+    details = database.execute(
+        "SELECT username FROM Session INNER JOIN User ON Session.userhash = User.userhash WHERE Session.session_token = ?",
+        sqlData).fetchone()
+    print(details)
+    if details == None:
+        details = ("",)
+    return render_template('upload.html', data=details)
 
 @app.route('/uploadData', methods=['POST', 'GET'])
 def uploadData():
