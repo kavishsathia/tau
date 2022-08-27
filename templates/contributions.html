@@ -105,7 +105,7 @@
 </div>
 {% for hash in data[0] %}
     <div class="center">
-        {% if hash[8] == "Success" %}
+        {% if hash[7] == "Success" %}
             <script>
             var url = '/static/{{ hash[5] }}.pdf';
 
@@ -156,7 +156,7 @@
             <div class="margintitle">
                 <div class="start">
                     <h1 class="title">{{ hash[6] }}</h1>
-                    {% if hash[8] == "Error" %}
+                    {% if hash[7] == "Error" %}
                     <h1 class="subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
                     {% else %}
                     {% endif %}
@@ -170,7 +170,7 @@
                     </a>
                 </div>
             </div>
-            {% if hash[8] == "Success" %}
+            {% if hash[7] == "Success" %}
             <canvas id="{{ hash[5] }}" class="canvasmargins"></canvas>
             {% else %}
             {% endif %}
