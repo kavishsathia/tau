@@ -6,6 +6,7 @@ import time
 from flask_cors import CORS
 import subprocess
 from os.path import exists
+from os import remove
 
 app = Flask(__name__)
 CORS(app)
@@ -103,12 +104,20 @@ def delete():
     token = request.cookies.get("token")
     id = request.form.get("delete")
     database = sqlite3.connect('questions.db')
+    sqlData = (id,)
+    filename = database.execute(
+        "SELECT file_name FROM Question WHERE id = ?",
+        sqlData).fetchone()
     sqlData = (token,)
     userhash = database.execute(
         "SELECT userhash FROM Session WHERE session_token = ?",
         sqlData).fetchone()
     sqlData = (id, userhash[0])
     database.execute("DELETE FROM Question WHERE id = ? AND userhash = ?", sqlData)
+    remove(f"static/{filename[0]}.aux")
+    remove(f"static/{filename[0]}.log")
+    remove(f"static/{filename[0]}.pdf")
+    remove(f"static/{filename[0]}.tex")
     database.commit()
     database.close()
     return redirect("/contributions")
