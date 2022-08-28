@@ -36,7 +36,7 @@
             margin-bottom : 15px;
         }
         .canvasmargin {
-            margin-top : 15px;
+            margin-top : 30px;
             margin-bottom : 15px;
             justify-self: center;
         }
@@ -58,6 +58,18 @@
         .start {
             justify-self: start;
         }
+        #pdf-viewer {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            overflow: auto;
+          }
+
+          .pdf-page-canvas {
+            display: block;
+            margin: 5px auto;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+          }
     </style>
     <script>
         function dropdown() {
@@ -110,48 +122,30 @@
 {% for hash in data[0] %}
     <div class="center">
         <script>
-            var url = '/static/{{ hash[5] }}-crop.pdf';
+            url = '/static/{{ hash[5] }}-crop.pdf';
+            var thePdf = null;
+            var scale = 1;
 
-            // Loaded via <script> tag, create shortcut to access PDF.js exports.
-            var pdfjsLib = window['pdfjs-dist/build/pdf'];
+            PDFJS.getDocument(url).promise.then(function(pdf) {
+                thePdf = pdf;
+                viewer = document.getElementById('{{ hash[5] }}');
 
-            // The workerSrc property shall be specified.
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
-
-            // Asynchronous download of PDF
-            var loadingTask = pdfjsLib.getDocument(url);
-            loadingTask.promise.then(function(pdf) {
-              console.log('PDF loaded');
-
-              // Fetch the first page
-              var pageNumber = 1;
-              pdf.getPage(pageNumber).then(function(page) {
-                console.log('Page loaded');
-
-                var scale = 3;
-                var viewport = page.getViewport({scale: scale});
-
-                // Prepare canvas using PDF page dimensions
-                var canvas = document.getElementById('{{ hash[5] }}');
-                canvas.style.width = "100%";
-                var context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                // Render PDF page into canvas context
-                var renderContext = {
-                  canvasContext: context,
-                  viewport: viewport
-                };
-                var renderTask = page.render(renderContext);
-                renderTask.promise.then(function () {
-                  console.log('Page rendered');
-                });
-              });
-            }, function (reason) {
-              // PDF loading error
-              console.error(reason);
+                for(page = 1; page <= pdf.numPages; page++) {
+                  canvas = document.createElement("canvas");
+                  canvas.className = 'pdf-page-canvas';
+                  viewer.appendChild(canvas);
+                  renderPage(page, canvas);
+                }
             });
+
+            function renderPage(pageNumber, canvas) {
+                thePdf.getPage(pageNumber).then(function(page) {
+                  viewport = page.getViewport({ scale: scale });
+                  canvas.height = viewport.height;
+                  canvas.width = viewport.width;
+                  page.render({canvasContext: canvas.getContext('2d'), viewport: viewport});
+            });
+            }
         </script>
         <div class="box grid">
             <div class="margintitle">
@@ -162,7 +156,7 @@
                     <button class="button is-dark ">Open in Overleaf</button>
                 </a>
             </div>
-            <canvas id="{{ hash[5] }}" class="canvasmargins"></canvas>
+            <div id='{{ hash[5] }}'></div>
         </div>
     </div>
 {% endfor %}
