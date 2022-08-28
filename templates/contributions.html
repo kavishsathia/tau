@@ -107,7 +107,7 @@
     <div class="center">
         {% if hash[7] == "Success" %}
             <script>
-            var url = '/static/{{ hash[5] }}.pdf';
+            var url = '/static/{{ hash[5] }}-jammed-crop.pdf';
 
             // Loaded via <script> tag, create shortcut to access PDF.js exports.
             var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -125,7 +125,7 @@
               pdf.getPage(pageNumber).then(function(page) {
                 console.log('Page loaded');
 
-                var scale = 3;
+                var scale = 5;
                 var viewport = page.getViewport({scale: scale});
 
                 // Prepare canvas using PDF page dimensions
