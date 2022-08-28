@@ -33,11 +33,13 @@
             width: 70%;
         }
         @media only screen and (max-width: 850px) {
+
             .grid {
                 width: 100%;
+                grid-template-columns: 1fr;
             }
             .box {
-                padding: 10px;
+                padding: 25px;
             }
             .margintitle {
                 padding: 20px;
@@ -90,7 +92,10 @@
             display: flex;
         }
         .start {
-            justify-self: start;
+              justify-self: start;
+              display: flex;
+              margin-bottom: 15px;
+            }
         }
         .pdf-viewer {
             width: 100%;
@@ -192,7 +197,19 @@
                     {% else %}
                     {% endif %}
                 </div>
-                <div class="end">
+                <div class="laptop end">
+                    <form action="/delete" method="POST" class="icon-margin laptop">
+                        <button class="button is-danger is-light" name="delete" value="{{ hash[0] }}">Delete</button>
+                    </form>
+                    <form action="/delete" method="POST" class="icon-margin mobile">
+                        <button class="button is-danger is-light is-small" name="delete" value="{{ hash[0] }}">Delete</button>
+                    </form>
+                    <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex">
+                        <button class="laptop button is-dark ">Open in Overleaf</button>
+                        <button class="mobile button is-dark is-small">Open in Overleaf</button>
+                    </a>
+                </div>
+                <div class="mobile start">
                     <form action="/delete" method="POST" class="icon-margin laptop">
                         <button class="button is-danger is-light" name="delete" value="{{ hash[0] }}">Delete</button>
                     </form>
