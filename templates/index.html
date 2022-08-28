@@ -17,12 +17,24 @@
         customElements.define("latex-js", LaTeXJSComponent)
     </script>
     <style>
-        .widthSetter {
-            width: 40%;
+        .mobile {
+            display: none;
         }
-        @media only screen and (max-width: 1000px) {
+        .laptop {
+            display: block;
+        }
+        .widthSetter {
+            width: 45%;
+        }
+        @media only screen and (max-width: 850px) {
           .widthSetter {
-            width: 75%;
+            width: 80%;
+        }
+          .mobile {
+            display: block;
+        }
+        .laptop {
+            display: none;
         }
         }
         .marginNav {
@@ -98,7 +110,10 @@
 </div>
 <div class="center">
     <form class="widthSetter" action="/results" method="POST">
-    <div class="center2"><img src="/static/tau2.png" width=100px height=100px></div>
+    <div class="laptop center2">
+        <img src="/static/tau2.png" width=100px height=100px class="laptop">
+        <img src="/static/tau2.png" width=85px height=85px class="mobile">
+    </div>
     <input class="input margin" type="text" name="search" placeholder="Search for questions">
     </form>
 </div>

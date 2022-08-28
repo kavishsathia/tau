@@ -12,8 +12,16 @@
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
     </script>
     <style>
-    .widthSetter {
+        .text-center {
+            text-align: center;
+        }
+        .widthSetter {
             width: 40%;
+        }
+        @media only screen and (max-width: 850px) {
+          .widthSetter {
+            width: 70%;
+        }
         }
         .marginNav {
             display: grid;
@@ -31,7 +39,7 @@
             display: flex;
             justify-content: center;
             position: relative;
-            top: 200px;
+            top: 160px;
         }
         .grid {
             display: grid;
@@ -95,7 +103,7 @@
             <h1 class="title">Upload</h1>
         </div>
         <div class="center2">
-            <h1 class="subtitle is-6">Make sure to include \usepackages[active,tightpages]{preview} in your preamble and to add all your code in the preview environment</h1>
+            <h1 class="subtitle is-6 text-center">Make sure to include \pagenumbering{gobble} in your code and to start every seperate question with @qn@Title,Year,Difficulty,Topic@qn@</h1>
         </div>
         <form action="/uploadData" method="POST" enctype="multipart/form-data">
         <div class="center2">
