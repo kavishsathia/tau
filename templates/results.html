@@ -58,18 +58,17 @@
         .start {
             justify-self: start;
         }
-        #pdf-viewer {
+        .pdf-viewer {
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.1);
             overflow: auto;
           }
-
-          .pdf-page-canvas {
+         .pdf-page-canvas {
             display: block;
             margin: 5px auto;
             border: 1px solid rgba(0, 0, 0, 0.2);
-          }
+         }
     </style>
     <script>
         function dropdown() {
@@ -124,12 +123,17 @@
         <script>
             url = '/static/{{ hash[5] }}-crop.pdf';
             var thePdf = null;
-            var scale = 1;
+            var scale = 2;
 
-            PDFJS.getDocument(url).promise.then(function(pdf) {
+            // Loaded via <script> tag, create shortcut to access PDF.js exports.
+            var pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+            // The workerSrc property shall be specified.
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+            pdfjsLib.getDocument(url).promise.then(function(pdf) {
                 thePdf = pdf;
                 viewer = document.getElementById('{{ hash[5] }}');
-
                 for(page = 1; page <= pdf.numPages; page++) {
                   canvas = document.createElement("canvas");
                   canvas.className = 'pdf-page-canvas';
@@ -156,7 +160,7 @@
                     <button class="button is-dark ">Open in Overleaf</button>
                 </a>
             </div>
-            <div id='{{ hash[5] }}'></div>
+            <div id='{{ hash[5] }}' class="pdf-viewer"></div>
         </div>
     </div>
 {% endfor %}
