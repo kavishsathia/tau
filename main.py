@@ -159,7 +159,7 @@ def uploadData():
         file = open(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", "w")
         file.write(datum.question)
         file.close()
-        log = subprocess.run(f"cd ~/tau/static/; pdflatex -halt-on-error -interaction=nonstopmode {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex; pdfcrop {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf; pdfjam {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}-crop.pdf --nup 1x2 --no-landscape --outfile {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}-jammed.pdf; pdfcrop {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}-jammed.pdf", shell=True)
+        log = subprocess.run(f"cd ~/tau/static/; pdflatex -halt-on-error -interaction=nonstopmode {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex; pdfcrop {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf;", shell=True)
         if exists(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf"):
             sqlData = (datum.year, datum.difficulty, datum.topic, details[0], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question, 'Success')
             cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
