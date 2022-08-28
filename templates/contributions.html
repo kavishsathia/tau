@@ -61,6 +61,17 @@
         .start {
             justify-self: start;
         }
+        .pdf-viewer {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            margin-top: 20px;
+          }
+         .pdf-page-canvas {
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+         }
     </style>
     <script>
         function dropdown() {
@@ -107,7 +118,9 @@
     <div class="center">
         {% if hash[7] == "Success" %}
             <script>
-            var url = '/static/{{ hash[5] }}-crop.pdf';
+            url = '/static/{{ hash[5] }}-crop.pdf';
+            var thePdf = null;
+            var scale = 5;
 
             // Loaded via <script> tag, create shortcut to access PDF.js exports.
             var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -115,40 +128,25 @@
             // The workerSrc property shall be specified.
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
 
-            // Asynchronous download of PDF
-            var loadingTask = pdfjsLib.getDocument(url);
-            loadingTask.promise.then(function(pdf) {
-              console.log('PDF loaded');
-
-              // Fetch the first page
-              var pageNumber = 1;
-              pdf.getPage(pageNumber).then(function(page) {
-                console.log('Page loaded');
-
-                var scale = 5;
-                var viewport = page.getViewport({scale: scale});
-
-                // Prepare canvas using PDF page dimensions
-                var canvas = document.getElementById('{{ hash[5] }}');
-                canvas.style.width = "100%";
-                var context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                // Render PDF page into canvas context
-                var renderContext = {
-                  canvasContext: context,
-                  viewport: viewport
-                };
-                var renderTask = page.render(renderContext);
-                renderTask.promise.then(function () {
-                  console.log('Page rendered');
-                });
-              });
-            }, function (reason) {
-              // PDF loading error
-              console.error(reason);
+            pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                thePdf = pdf;
+                viewer = document.getElementById('{{ hash[5] }}');
+                for(page = 1; page <= pdf.numPages; page++) {
+                  canvas = document.createElement("canvas");
+                  canvas.className = 'pdf-page-canvas';
+                  viewer.appendChild(canvas);
+                  renderPage(page, canvas);
+                }
             });
+
+            function renderPage(pageNumber, canvas) {
+                thePdf.getPage(pageNumber).then(function(page) {
+                  viewport = page.getViewport({ scale: scale });
+                  canvas.height = viewport.height;
+                  canvas.width = viewport.width;
+                  page.render({canvasContext: canvas.getContext('2d'), viewport: viewport});
+            });
+            }
         </script>
             {% else %}
             {% endif %}
@@ -171,7 +169,7 @@
                 </div>
             </div>
             {% if hash[7] == "Success" %}
-            <canvas id="{{ hash[5] }}" class="canvasmargins"></canvas>
+            <div id='{{ hash[5] }}' class="pdf-viewer"></div>
             {% else %}
             {% endif %}
         </div>
