@@ -189,8 +189,8 @@
         <div class="box grid">
             <div class="margintitle">
                 <div class="start">
-                    <h1 class="laptop title">{{ hash[6] }}</h1>
-                    <h1 class="mobile title is-4">{{ hash[6] }}</h1>
+                    <h1 class="laptop title is-2">Question {{ hash[0] }}</h1>
+                    <h1 class="mobile title is-4">Question {{ hash[0] }}</h1>
                     {% if hash[7] == "Error" %}
                     <h1 class="laptop subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
                     <h1 class="mobile subtitle is-7">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>

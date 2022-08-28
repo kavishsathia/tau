@@ -29,7 +29,13 @@
             grid-template-columns: 1fr;
             width: 70%;
         }
-        @media only screen and (max-width: 1000px) {
+                .widthSetter {
+            width: 45%;
+        }
+        @media only screen and (max-width: 850px) {
+            .widthSetter {
+                width: 80%;
+            }
             .grid {
                 width: 100%;
             }
@@ -50,9 +56,6 @@
                 margin-top: 0px;
             }
 
-        }
-        .widthSetter {
-            width: 40%;
         }
         .center {
             display: flex;
@@ -145,7 +148,10 @@
 </div>
 <div class="center searchMargin">
         <form class="widthSetter" action="/results" method="POST">
-            <div class="center2"><img src="/static/tau2.png" width=100px height=100px></div>
+            <div class="center2">
+                <img src="/static/tau2.png" width=100px height=100px class="laptop">
+                <img src="/static/tau2.png" width=85px height=85px class="mobile">
+            </div>
             <input class="input margin" type="text" name="search" placeholder="Search">
         </form>
     </div>
@@ -186,8 +192,8 @@
         <div class="box grid">
             <div class="margintitle">
                 <div class="start">
-                    <h1 class="laptop title">{{ hash[6] }}</h1>
-                    <h1 class="mobile title is-4">{{ hash[6] }}</h1>
+                    <h1 class="laptop title is-2">Question {{ hash[0] }}</h1>
+                    <h1 class="mobile title is-4">Question {{ hash[0] }}</h1>
                 </div>
                 <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex" class="end">
                     <button class="laptop button is-dark ">Open in Overleaf</button>
