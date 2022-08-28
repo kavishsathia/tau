@@ -22,6 +22,27 @@
             grid-template-columns: 1fr;
             width: 70%;
         }
+        @media only screen and (max-width: 850px) {
+            .grid {
+                width: 100%;
+            }
+            .box {
+                padding: 10px;
+            }
+            .margintitle {
+                padding: 20px;
+                padding-bottom: 0px;
+            }
+            .mobile {
+                display: block;
+            }
+            .laptop {
+                display: none;
+            }
+            .pdf-viewer {
+                margin-top: 0px;
+            }
+        }
         .widthSetter {
             width: 40%;
         }
@@ -153,18 +174,24 @@
         <div class="box grid">
             <div class="margintitle">
                 <div class="start">
-                    <h1 class="title">{{ hash[6] }}</h1>
+                    <h1 class="laptop title">{{ hash[6] }}</h1>
+                    <h1 class="mobile title is-4">{{ hash[6] }}</h1>
                     {% if hash[7] == "Error" %}
-                    <h1 class="subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
+                    <h1 class="laptop subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
+                    <h1 class="mobile subtitle is-7">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
                     {% else %}
                     {% endif %}
                 </div>
                 <div class="end">
-                    <form action="/delete" method="POST" class="icon-margin">
+                    <form action="/delete" method="POST" class="icon-margin laptop">
                         <button class="button is-danger is-light" name="delete" value="{{ hash[0] }}">Delete</button>
                     </form>
+                    <form action="/delete" method="POST" class="icon-margin mobile">
+                        <button class="button is-danger is-light is-small" name="delete" value="{{ hash[0] }}">Delete</button>
+                    </form>
                     <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex">
-                        <button class="button is-dark ">Open in Overleaf</button>
+                        <button class="laptop button is-dark ">Open in Overleaf</button>
+                        <button class="mobile button is-dark is-small">Open in Overleaf</button>
                     </a>
                 </div>
             </div>

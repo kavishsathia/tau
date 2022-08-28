@@ -34,6 +34,7 @@
             }
             .margintitle {
                 padding: 20px;
+                padding-bottom: 0px;
             }
             .mobile {
                 display: block;
@@ -41,6 +42,10 @@
             .laptop {
                 display: none;
             }
+            .pdf-viewer {
+                margin-top: 0px;
+            }
+
         }
         .widthSetter {
             width: 40%;
@@ -178,7 +183,7 @@
             <div class="margintitle">
                 <div class="start">
                     <h1 class="laptop title">{{ hash[6] }}</h1>
-                    <h1 class="mobile title is-3">{{ hash[6] }}</h1>
+                    <h1 class="mobile title is-4">{{ hash[6] }}</h1>
                 </div>
                 <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex" class="end">
                     <button class="laptop button is-dark ">Open in Overleaf</button>
