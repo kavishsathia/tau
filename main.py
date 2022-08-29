@@ -44,7 +44,7 @@ def resultsPage():
     regex = r".*"
     search = request.form['search'].strip().split(" ")
     data = ()
-    string = "SELECT * from Question WHERE "
+    string = "SELECT * from Question WHERE status = 'Success' AND "
     query = ""
     substring = 0
     while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
