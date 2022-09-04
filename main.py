@@ -81,7 +81,7 @@ def contributions():
     sql_data = (session['username'],)
     try:
         contributions = database.execute(
-            "SELECT * FROM Question WHERE userhash = ?",
+            "SELECT * FROM Question WHERE username = ?",
             sql_data
         ).fetchall()
         database.close()
@@ -147,14 +147,14 @@ def upload_data():
             if exists(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf"):
                 sql_data = (datum.year, datum.difficulty, datum.topic, session['username'], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question, 'Success')
                 cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
-                               f"'topic', 'userhash', 'file_name', 'title', 'contents', 'status') VALUES (?, "
+                               f"'topic', 'username', 'file_name', 'title', 'contents', 'status') VALUES (?, "
                                f"?, ?, ?, ?, ?, ?, ?);", sql_data)
             else:
                 sql_data = (datum.year, datum.difficulty, datum.topic, session['username'],
                            str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question,
                            'Error')
                 cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
-                               f"'topic', 'userhash', 'file_name', 'title', 'contents', 'status') VALUES (?, "
+                               f"'topic', 'username', 'file_name', 'title', 'contents', 'status') VALUES (?, "
                                f"?, ?, ?, ?, ?, ?, ?);", sql_data)
             database.commit()
         finally:
