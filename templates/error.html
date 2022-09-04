@@ -1,28 +1,13 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <title>MathJax TeX Test Page</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script type="text/javascript" id="MathJax-script" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-    </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <script type="module">
-        import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
-        customElements.define("latex-js", LaTeXJSComponent)
-    </script>
     <link rel="stylesheet" href="/static/stylesheet.css">
-    <script>
-        function dropdown() {
-            var element = document.getElementById("dropdown");
-            element.classList.toggle("is-active");
-        }
-    </script>
 </head>
 <body>
 <div class="nav-margin" id="header">
@@ -63,13 +48,9 @@
 
 </div>
 <div class="index-center">
-    <form class="width-setter" action="/results" method="POST">
-    <div class="laptop center-items">
-        <img src="/static/tau2.png" width=100px height=100px class="laptop">
-        <img src="/static/tau2.png" width=85px height=85px class="mobile">
+    <div class="width-setter">
+        <div class="center-items"><h1 class="title is-4 marginBottomSignIn">OOPs, the server couldn't handle that!</h1></div>
     </div>
-    <input class="input search-margin" type="text" name="search" placeholder="Search for questions">
-    </form>
 </div>
 </body>
 </html>

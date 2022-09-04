@@ -11,47 +11,9 @@
     <script type="text/javascript" id="MathJax-script" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
     </script>
-    <style>
-        .text-center {
-            text-align: center;
-        }
-        .widthSetter {
-            width: 40%;
-        }
-        @media only screen and (max-width: 850px) {
-          .widthSetter {
-            width: 70%;
-        }
-        }
-        .marginNav {
-            display: grid;
-            margin : 20px;
-            grid-template-columns: 1fr 1fr;
-        }
-        .end {
-            justify-self: end;
-        }
-        .start {
-            justify-self: start;
-        }
-        .center {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            position: relative;
-            top: 160px;
-        }
-        .grid {
-            display: grid;
-        }
-        .center2 {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-    </style>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/stylesheet.css">
     <script>
         function getFileName() {
             value = document.getElementById("file-input").files[0].name;
@@ -64,7 +26,7 @@
     </script>
 </head>
 <body>
-<div class="marginNav" id="header">
+<div class="nav-margin" id="header">
     <div class="start">
        <button class="button is-white">About</button>
         <button class="button is-white">Help</button>
@@ -88,25 +50,28 @@
                    <a href="/contributions" class="dropdown-item">
                     Contributions
                   </a>
-                    <hr class="dropdown-divider">
                   <a href="/upload" class="dropdown-item">
                     Upload questions
+                  </a>
+                    <hr class="dropdown-divider">
+                    <a href="/sign_out" class="dropdown-item">
+                    Sign out
                   </a>
                 </div>
               </div>
             </div>
         {% endif %}
 </div>
-<div class="center">
-    <div class="widthSetter">
-        <div class="center2">
-            <h1 class="title">Upload</h1>
+<div class="upload-center">
+    <div class="width-setter">
+        <div class="center-items">
+           <h1 class="title">Upload</h1> 
         </div>
-        <div class="center2">
+        <div class="center-items">
             <h1 class="subtitle is-6 text-center">Make sure to include \pagenumbering{gobble} in your code and to start every seperate question with @qn@Title,Year,Difficulty,Topic@qn@</h1>
         </div>
         <form action="/uploadData" method="POST" enctype="multipart/form-data">
-        <div class="center2">
+        <div class="center-items">
 
                 <div class="file has-name is-boxed">
                   <label class="file-label">
@@ -122,7 +87,7 @@
             </div>
 
         </div>
-        <div class="center2">
+        <div class="center-items">
             <button class="button">Submit</button>
         </div>
             </form>

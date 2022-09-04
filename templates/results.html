@@ -13,98 +13,7 @@
     </script>
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <style>
-        .mobile {
-            display: none;
-        }
-        .laptop {
-            display: block;
-        }
-        .box {
-            padding: 80px;
-            margin: 10px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            width: 70%;
-        }
-        .widthSetter {
-            width: 45%;
-        }
-        @media only screen and (max-width: 850px) {
-            .widthSetter {
-                width: 80%;
-            }
-            .grid {
-                width: 100%;
-            }
-            .box {
-                padding: 10px;
-            }
-            .margintitle {
-                padding: 20px;
-                padding-bottom: 0px;
-            }
-            .mobile {
-                display: block;
-            }
-            .laptop {
-                display: none;
-            }
-            .pdf-viewer {
-                margin-top: 0px;
-            }
-
-        }
-        .center {
-            display: flex;
-            justify-content: center;
-        }
-        .center2 {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        .margin {
-            margin-top : 15px;
-            margin-bottom : 15px;
-        }
-        .canvasmargin {
-            margin-top : 30px;
-            margin-bottom : 15px;
-            justify-self: center;
-        }
-        .searchMargin {
-            margin-bottom: 20px;
-        }
-        .marginNav {
-            display: grid;
-            margin : 20px;
-            grid-template-columns: 1fr 1fr;
-        }
-        .margintitle {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-        .end {
-            justify-self: end;
-        }
-        .start {
-            justify-self: start;
-        }
-        .pdf-viewer {
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            margin-top: 20px;
-          }
-         .pdf-page-canvas {
-            display: block;
-            width: 100%;
-            margin-top: 30px;
-         }
-    </style>
+    <link rel="stylesheet" href="/static/stylesheet.css">
     <script>
         function dropdown() {
             var element = document.getElementById("dropdown");
@@ -113,7 +22,7 @@
     </script>
 </head>
 <body>
-<div class="marginNav" id="header">
+<div class="nav-margin" id="header">
     <div class="start">
        <button class="button is-white">About</button>
         <button class="button is-white">Help</button>
@@ -137,22 +46,25 @@
                    <a href="/contributions" class="dropdown-item">
                     Contributions
                   </a>
-                    <hr class="dropdown-divider">
                   <a href="/upload" class="dropdown-item">
                     Upload questions
+                  </a>
+                    <hr class="dropdown-divider">
+                    <a href="/sign_out" class="dropdown-item">
+                    Sign out
                   </a>
                 </div>
               </div>
             </div>
         {% endif %}
 </div>
-<div class="center searchMargin">
-        <form class="widthSetter" action="/results" method="POST">
-            <div class="center2">
+<div class="center">
+        <form class="width-setter" action="/results" method="POST">
+            <div class="center-items">
                 <img src="/static/tau2.png" width=100px height=100px class="laptop">
                 <img src="/static/tau2.png" width=85px height=85px class="mobile">
             </div>
-            <input class="input margin" type="text" name="search" placeholder="Search">
+            <input class="input search-margin" type="text" name="search" placeholder="Search">
         </form>
     </div>
 
@@ -189,8 +101,8 @@
             });
             }
         </script>
-        <div class="box grid">
-            <div class="margintitle">
+        <div class="grid">
+            <div class="title-margin">
                 <div class="start">
                     <h1 class="title is-4">Question {{ hash[0] }}</h1>
                 </div>

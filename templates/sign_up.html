@@ -7,94 +7,25 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <style>
-        .margin {
-            display: grid;
-            margin-top : 20px;
-            margin-bottom : 20px;
-            grid-template-columns: 1fr 1fr;
-        }
-        .marginNav {
-            display: grid;
-            margin:20px;
-            grid-template-columns: 1fr 1fr;
-        }
-        .widthSetter {
-            width: 35%;
-        }
-        @media only screen and (max-width: 850px) {
-        .widthSetter {
-            width: 65%;
-        }
-        }
-        .center2 {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        .center {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            position: relative;
-            top: 130px;
-
-        }
-        .marginBottom {
-            margin-bottom: 10px;
-        }
-        .marginBottomSignIn {
-            margin-bottom: 13px;
-        }
-        .start {
-            justify-self: start;
-        }
-        .button.is-light {
-            background-color: #e7e7e7;
-        }
-    </style>
-    <script>
-        window.post = function(url, data) {
-          return fetch(url, {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
-        }
-        function setCookie(cname, cvalue, exdays) {
-          const d = new Date();
-          d.setTime(d.getTime() + (exdays*24*60*60*1000));
-          let expires = "expires="+ d.toUTCString();
-          document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
-        function sign_up() {
-            let username = document.querySelector('#username').value;
-            let password = document.querySelector('#password').value;
-            let confirm_password = document.querySelector('#confirm_password').value;
-            data = {"username": username, "password": password, "confirm_password" : confirm_password};
-            fetch("/signUpData", {
-              method: "POST",
-              mode: 'cors',
-              headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-              body: JSON.stringify(data)
-            }).then(res => res.json())
-              .then(data => {
-                setCookie("token", data["token"], 1)
-                window.location.replace("/");
-            });
-        }
-    </script>
+    <link rel="stylesheet" href="/static/stylesheet.css">
 </head>
 <body>
-<div class="marginNav" id="header">
+<div class="nav-margin" id="header">
     <div class="start">
        <button class="button is-white">About</button>
         <button class="button is-white">Help</button>
     </div>
 </div>
-<div class="center">
-    <div class="widthSetter">
-        <div class="center2"><h1 class="title is-2 marginBottom">Welcome!</h1></div>
-        <input class="input margin" id="username" type="text" name="search" placeholder="Username"/>
-        <input class="input margin" id="password" type="password" name="search" placeholder="Password">
-        <input class="input margin" id="confirm_password" type="password" name="search" placeholder="Confirm password">
-        <button class="center2 button marginBottomSignIn is-dark" onclick="sign_up()">Sign up</button>
+<div class="sign-in-center">
+    <div class="width-setter">
+        <div class="center-items"><h1 class="title is-2 margin-bottom-sign-in">Welcome!</h1></div>
+        <div class="center-items"><p class="subtitle is-6 is-red text-color">{{ data[0] }}</p></div>
+        <form action="sign_up_data" method="POST">
+            <input class="input search-margin" id="username" type="text" name="username" placeholder="Username"/>
+            <input class="input search-margin" id="password" type="password" name="password" placeholder="Password">
+            <input class="input search-margin margin-bottom-sign-in" id="confirm_password" type="password" name="confirm_password" placeholder="Confirm password">
+            <button class="center-items button margin-bottom-sign-in is-dark">Sign up</button>
+        </form>
     </div>
 </div>
 </body>
