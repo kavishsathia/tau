@@ -69,7 +69,7 @@ def search_page():
 
         return render_template('results.html', data=(return_data, session['username']))
     else:
-        return render_template('index.html', data="")
+        return render_template('results.html', data=([], ""))
 
 @app.route('/results', methods=['POST', 'GET'])
 def results_page():
