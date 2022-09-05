@@ -26,52 +26,58 @@ def data_process(data):
 @app.route('/')
 def search_page():
     if 'username' in session:
-        return render_template('index.html', data=session['username'])
+        search = request.form['search'].strip().split(" ")
+
+        # parsing
+        sql_string = "SELECT * from Question WHERE status = 'Success' AND "
+        data = ();
+        query = "";
+        substring = 0
+        while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
+            query = query + search[substring] + " "
+            substring += 1
+        sql_string = sql_string + "contents LIKE ? AND "
+        data = data + ("%" + query.strip() + "%",)
+        register = ""
+        for i in range(0, len(search)):
+            if search[i] in ["-t", "-d", "-y"]:
+                register = search[i]
+            elif register == "-t":
+                data = data + ("%" + search[i] + "%",)
+                sql_string = sql_string + "topic LIKE ? AND "
+            elif register == "-d":
+                data = data + ("%" + search[i] + "%",)
+                sql_string = sql_string + "difficulty LIKE ? AND "
+            elif register == "-y":
+                try:
+                    year = int(search[i])
+                except:
+                    year = 0
+                data = data + (year,)
+                sql_string = sql_string + "year = ? AND "
+
+        # finding
+        database = sqlite3.connect('questions.db')
+        cursor = database.cursor()
+        try:
+            cursor.execute(sql_string[:-4], data)
+            return_data = cursor.fetchall()
+        except:
+            return redirect("/error")
+        finally:
+            database.close()
+
+        return render_template('results.html', data=(return_data, session['username']))
     else:
         return render_template('index.html', data="")
 
 @app.route('/results', methods=['POST', 'GET'])
 def results_page():
-    search = request.form['search'].strip().split(" ")
+    if 'username' in session:
+        return render_template('index.html', data=session['username'])
+    else:
+        return render_template('index.html', data="")
 
-    #parsing
-    sql_string = "SELECT * from Question WHERE status = 'Success' AND "
-    data = (); query = ""; substring = 0
-    while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
-        query = query + search[substring] + " "
-        substring += 1
-    sql_string = sql_string + "contents LIKE ? AND "
-    data = data + ("%" + query.strip() + "%",)
-    register = ""
-    for i in range(0, len(search)):
-        if search[i] in ["-t", "-d", "-y"]:
-            register = search[i]
-        elif register == "-t":
-            data = data + ("%" + search[i] + "%",)
-            sql_string = sql_string + "topic LIKE ? AND "
-        elif register == "-d":
-            data = data + ("%" + search[i] + "%",)
-            sql_string = sql_string + "difficulty LIKE ? AND "
-        elif register == "-y":
-            try:
-                year = int(search[i])
-            except:
-                year = 0
-            data = data + (year,)
-            sql_string = sql_string + "year = ? AND "
-
-    #finding
-    database = sqlite3.connect('questions.db')
-    cursor = database.cursor()
-    try:
-        cursor.execute(sql_string[:-4], data)
-        return_data = cursor.fetchall()
-    except:
-        return redirect("/error")
-    finally:
-        database.close()
-    
-    return render_template('results.html', data=(return_data, session['username']))
 
 @app.route('/contributions', methods=['GET'])
 def contributions():
