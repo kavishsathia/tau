@@ -23,15 +23,22 @@ def data_process(data):
     split_data = [datum for datum in split_data if datum != ""]
     return [Question(split_data, i) for i in range(0, len(split_data), 2)]
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def search_page():
+    if 'username' in session:
+        return render_template('index.html', data=session['username'])
+    else:
+        return render_template('index.html', data="")
+
+@app.route('/results', methods=['POST'])
+def results_page():
     if 'username' in session:
         search = request.form['search'].strip().split(" ")
 
         # parsing
         sql_string = "SELECT * from Question WHERE status = 'Success' AND "
-        data = ();
-        query = "";
+        data = ()
+        query = ""
         substring = 0
         while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
             query = query + search[substring] + " "
@@ -70,14 +77,6 @@ def search_page():
         return render_template('results.html', data=(return_data, session['username']))
     else:
         return render_template('results.html', data=([], ""))
-
-@app.route('/results', methods=['POST', 'GET'])
-def results_page():
-    if 'username' in session:
-        return render_template('index.html', data=session['username'])
-    else:
-        return render_template('index.html', data="")
-
 
 @app.route('/contributions', methods=['GET'])
 def contributions():
@@ -136,7 +135,7 @@ def upload_page():
     details = (session['username'],)
     return render_template('upload.html', data=details)
 
-@app.route('/upload_data', methods=['POST', 'GET'])
+@app.route('/upload_data', methods=['POST'])
 def upload_data():
     contents = str(request.files['file'].read(), 'utf-8')
     data = data_process(contents)
@@ -186,7 +185,7 @@ def get_token():
         return render_template("sign_in.html", data=("Invalid username or password",))
 
 
-@app.route('/sign_up_data', methods=['POST', 'GET'])
+@app.route('/sign_up_data', methods=['POST'])
 def sign_up_data():
     data = request.form
     if data['password'] != data['confirm_password']:
@@ -212,11 +211,11 @@ def sign_up_data():
     return redirect("/")
 
 
-@app.route('/sign_up', methods=['POST', 'GET'])
+@app.route('/sign_up', methods=['GET'])
 def sign_up():
     return render_template("sign_up.html", data=("",))
 
-@app.route('/sign_in', methods=['POST', 'GET'])
+@app.route('/sign_in', methods=['GET'])
 def sign_in():
     return render_template("sign_in.html", data=("",))
 
