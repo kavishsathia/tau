@@ -67,7 +67,7 @@
 {% for item in data[0] %}
     <div class="center">
         <script>
-            url = '/static/{{ item[5] }}-crop.pdf';
+            url = '/static/{{ item[4] }}-crop.pdf';
             var thePdf = null;
             var scale = 5;
 
@@ -79,7 +79,7 @@
 
             pdfjsLib.getDocument(url).promise.then(function(pdf) {
                 thePdf = pdf;
-                viewer = document.getElementById('{{ item[5] }}');
+                viewer = document.getElementById('{{ item[4] }}');
                 for(page = 1; page <= pdf.numPages; page++) {
                   canvas = document.createElement("canvas");
                   canvas.className = 'pdf-page-canvas';
@@ -108,7 +108,7 @@
         <div class="grid">
             <div class="title-margin">
                 <div class="start-error">
-                    <h1 class="title is-4">{{ item[6]|truncate(15, True) }}</h1>
+                    <h1 class="title is-4">{{ item[5]|truncate(15, True) }}</h1>
                     <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2]|truncate(15, True) }}</h2>
                 </div>
                 <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ item[5] }}.tex" class="end">
@@ -116,7 +116,7 @@
                     <button class="mobile button is-dark is-small">Open in Overleaf</button>
                 </a>
             </div>
-            <div id='{{ item[5] }}' class="pdf-viewer"></div>
+            <div id='{{ item[4] }}' class="pdf-viewer"></div>
         </div>
     </div>
 {% endfor %}

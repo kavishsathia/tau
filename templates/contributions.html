@@ -65,7 +65,7 @@
     <div class="center">
         {% if item[7] == "Success" %}
             <script>
-            url = '/static/{{ item[5] }}-crop.pdf';
+            url = '/static/{{ item[4] }}-crop.pdf';
             var thePdf = null;
             var scale = 5;
 
@@ -77,7 +77,7 @@
 
             pdfjsLib.getDocument(url).promise.then(function(pdf) {
                 thePdf = pdf;
-                viewer = document.getElementById('{{ item[5] }}');
+                viewer = document.getElementById('{{ item[4] }}');
                 for(page = 1; page <= pdf.numPages; page++) {
                   canvas = document.createElement("canvas");
                   canvas.className = 'pdf-page-canvas';
@@ -100,12 +100,12 @@
         <div class="grid">
             <div class="title-margin">
                 <div class="start-error">
-                    <h1 class="title is-4">{{ item[6]|truncate(15, True) }}</h1>
+                    <h1 class="title is-4">{{ item[5]|truncate(15, True) }}</h1>
                     {% if item[7] == "Error" %}
                     <h1 class="laptop subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ item[5] }}.log">View the logs.</a></h1>
                     <h1 class="mobile subtitle is-7">There was an error in the compilation of your TeX file. <a href="/static/{{ item[5] }}.log">View the logs.</a></h1>
                     {% else %}
-                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[3]|truncate(15, True) }}</h2>
+                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2]|truncate(15, True) }}</h2>
                     {% endif %}
                 </div>
                 <div class="laptop end">
@@ -125,8 +125,8 @@
                     </a>
                 </div>
             </div>
-            {% if item[7] == "Success" %}
-            <div id='{{ item[5] }}' class="pdf-viewer"></div>
+            {% if item[6] == "Success" %}
+            <div id='{{ item[4] }}' class="pdf-viewer"></div>
             {% else %}
             {% endif %}
         </div>
