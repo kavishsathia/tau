@@ -227,7 +227,7 @@ def sign_up_data():
                 except:
                     database.close()
                     return redirect("/error")
-        except
+        except:
             database.close()
             return redirect("/error")
     return redirect("/")
