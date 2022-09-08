@@ -20,8 +20,8 @@
 <body>
 <div class="nav-margin" id="header">
     <div class="start">
-       <button class="button is-white">About</button>
-        <button class="button is-white">Help</button>
+       <a href="/about"><button class="button is-white">About</button></a>
+        <a href="/help"><button class="button is-white">Help</button></a>
     </div>
         {% if data[1] == "" %}
             <a href="/sign_in" class="end">
@@ -60,14 +60,14 @@
                 <img src="/static/tau2.png" width=100px height=100px class="laptop">
                 <img src="/static/tau2.png" width=85px height=85px class="mobile">
             </div>
-            <input class="input search-margin" type="text" name="search" placeholder="Search">
+            <input class="input search-margin" type="text" name="search" placeholder="{query} -t {topic} -d {difficulty H/M/E} -y {year}">
         </form>
     </div>
 
-{% for hash in data[0] %}
+{% for item in data[0] %}
     <div class="center">
         <script>
-            url = '/static/{{ hash[5] }}-crop.pdf';
+            url = '/static/{{ item[5] }}-crop.pdf';
             var thePdf = null;
             var scale = 5;
 
@@ -79,7 +79,7 @@
 
             pdfjsLib.getDocument(url).promise.then(function(pdf) {
                 thePdf = pdf;
-                viewer = document.getElementById('{{ hash[5] }}');
+                viewer = document.getElementById('{{ item[5] }}');
                 for(page = 1; page <= pdf.numPages; page++) {
                   canvas = document.createElement("canvas");
                   canvas.className = 'pdf-page-canvas';
@@ -96,18 +96,26 @@
                   page.render({canvasContext: canvas.getContext('2d'), viewport: viewport});
             });
             }
+            function truncateString(str, num) {
+              if (str.length > num) {
+                return str.slice(0, num) + "...";
+              } else {
+                return str;
+              }
+            }
         </script>
         <div class="grid">
             <div class="title-margin">
                 <div class="start">
-                    <h1 class="title is-4">Question {{ hash[0] }}</h1>
+                    <h1 class="title is-4">truncateString("{{ item[6] }}", 12)</h1>
+                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2] }} | truncateString("{{ item[3] }}", 10)</h2>
                 </div>
-                <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex" class="end">
+                <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ item[5] }}.tex" class="end">
                     <button class="laptop button is-dark ">Open in Overleaf</button>
                     <button class="mobile button is-dark is-small">Open in Overleaf</button>
                 </a>
             </div>
-            <div id='{{ hash[5] }}' class="pdf-viewer"></div>
+            <div id='{{ item[5] }}' class="pdf-viewer"></div>
         </div>
     </div>
 {% endfor %}

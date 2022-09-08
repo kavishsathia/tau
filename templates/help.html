@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>About</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/stylesheet.css">
+</head>
+<body>
+   <div style="padding: 80px; justify-content:center; display:grid">
+       <h1 class="title" style="margin-bottom:50px">Help</h1>
+        <h1 class="subtitle is-5">
+            When querying, use this format:
+        </h1>
+       <h1 class="subtitle is-5">
+           <b>{query} -t {topic} -d {difficulty H/M/E} -y {year}</b>
+        </h1>
+       <h1 class="subtitle is-5">
+           When uploading, use this format:
+        </h1>
+       <h1 class="subtitle is-5">
+           <b> @qn@{title},{year},{difficulty H/M/E},{topic}@qn@
+           <br>
+           {rawLatex}
+           <br>
+           @qn@{title},{year},{difficulty H/M/E},{topic}@qn@
+           <br>
+               {rawLatex} </b>
+        </h1>
+       <h1 class="subtitle is-5">
+           Tau has tried to make errors a first-class citizen,<br> so if you have a flaw in your rawLatex, you will be able <br>to see a log of the errors in your contribution page.
+        </h1>
+   </div>
+</body>
+</html>

@@ -15,13 +15,20 @@
             var element = document.getElementById("dropdown");
             element.classList.toggle("is-active");
         }
+        function truncateString(str, num) {
+            if (str.length > num) {
+                return str.slice(0, num) + "...";
+              } else {
+                return str;
+              }
+            }
     </script>
 </head>
 <body>
 <div class="nav-margin" id="header">
     <div class="start">
-       <button class="button is-white">About</button>
-        <button class="button is-white">Help</button>
+       <a href="/about"><button class="button is-white">About</button></a>
+        <a href="/help"><button class="button is-white">Help</button></a>
     </div>
         {% if data[1] == "" %}
             <a href="/sign_in" class="end">
@@ -93,11 +100,12 @@
         <div class="grid">
             <div class="title-margin">
                 <div class="start-error">
-                    <h1 class="title is-4">Question {{ hash[0] }}</h1>
+                    <h1 class="title is-4">truncateString("{{ item[6] }}", 12)</h1>
                     {% if hash[7] == "Error" %}
                     <h1 class="laptop subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
                     <h1 class="mobile subtitle is-7">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
                     {% else %}
+                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2] }} | truncateString("{{ item[3] }}", 10)</h2>
                     {% endif %}
                 </div>
                 <div class="laptop end">

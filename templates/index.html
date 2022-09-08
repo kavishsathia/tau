@@ -20,8 +20,8 @@
 <body>
 <div class="nav-margin" id="header">
     <div class="start">
-       <button class="button is-white">About</button>
-        <button class="button is-white">Help</button>
+       <a href="/about"><button class="button is-white">About</button></a>
+        <a href="/help"><button class="button is-white">Help</button></a>
     </div>
         {% if data == "" %}
             <a href="/sign_in" class="end">
@@ -61,7 +61,7 @@
         <img src="/static/tau2.png" width=100px height=100px class="laptop">
         <img src="/static/tau2.png" width=85px height=85px class="mobile">
     </div>
-    <input class="input search-margin" type="text" name="search" placeholder="Search for questions">
+    <input class="input search-margin" type="text" name="search" placeholder="{query} -t {topic} -d {difficulty H/M/E} -y {year}">
     </form>
 </div>
 </body>

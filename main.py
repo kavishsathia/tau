@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import hashlib
 import subprocess; from os.path import exists; from os import remove
+import time; import random
 
 app = Flask(__name__)
 app.secret_key = "computing"
@@ -16,7 +17,7 @@ class Question():
             except:
                 year = 0
             self.year = year
-            self.difficulty = attributes[2]
+            self.difficulty = attributes[2] if attributes[2] in ["H", "M", "E"] else "M"
             self.topic = attributes[3]
             if index + 1 < len(l):
                 self.question = l[index + 1]
@@ -65,8 +66,8 @@ def results_page():
             data = data + ("%" + search[i] + "%",)
             sql_string = sql_string + "topic LIKE ? AND "
         elif register == "-d":
-            data = data + ("%" + search[i] + "%",)
-            sql_string = sql_string + "difficulty LIKE ? AND "
+            data = data + (search[i],)
+            sql_string = sql_string + "difficulty = ? AND "
         elif register == "-y":
             try:
                 year = int(search[i])
@@ -75,7 +76,7 @@ def results_page():
             data = data + (year,)
             sql_string = sql_string + "year = ? AND "
 
-        # finding
+    # finding
     database = sqlite3.connect('questions.db')
     cursor = database.cursor()
     try:
@@ -140,6 +141,7 @@ def delete():
         if exists(f"static/{filename[0]}.aux"): remove(f"static/{filename[0]}.aux")
         if exists(f"static/{filename[0]}.log"): remove(f"static/{filename[0]}.log")
         if exists(f"static/{filename[0]}.pdf"): remove(f"static/{filename[0]}.pdf")
+        if exists(f"static/{filename[0]}-crop.pdf"): remove(f"static/{filename[0]}.pdf")
         if exists(f"static/{filename[0]}.tex"): remove(f"static/{filename[0]}.tex")
     return redirect("/contributions")
 
@@ -152,28 +154,32 @@ def upload_page():
 
 @app.route('/upload_data', methods=['POST'])
 def upload_data():
+
     if 'username' not in session:
         return redirect("/sign_in")
     contents = str(request.files['file'].read(), 'utf-8')
     data = data_process(contents)
     for datum in data:
+        hash = str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())
+        nonce = str(int(time.time()))
+        rand = str(random.randint(0, 100000))
         try:
-            file = open(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex", "w")
+            file = open(f"static/{hash}-{nonce}-{rand}.tex", "w")
             file.write(datum.question)
         finally:
             file.close()
-        subprocess.run(f"cd ~/tau/static/; pdflatex -halt-on-error -interaction=nonstopmode {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.tex; pdfcrop {str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf;", shell=True)
+        subprocess.run(f"cd ~/tau/static/; pdflatex -halt-on-error -interaction=nonstopmode {hash}-{nonce}-{rand}.tex; pdfcrop {hash}-{nonce}-{rand}.pdf;", shell=True)
         database = sqlite3.connect('questions.db')
         cursor = database.cursor()
         try:
-            if exists(f"static/{str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest())}.pdf"):
-                sql_data = (datum.year, datum.difficulty, datum.topic, session['username'], str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question, 'Success')
+            if exists(f"static/{hash}-{nonce}-{rand}-crop.pdf"):
+                sql_data = (datum.year, datum.difficulty, datum.topic, session['username'], f"{hash}-{nonce}-{rand}", datum.title, datum.question, 'Success')
                 cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
                                f"'topic', 'username', 'file_name', 'title', 'contents', 'status') VALUES (?, "
                                f"?, ?, ?, ?, ?, ?, ?);", sql_data)
             else:
                 sql_data = (datum.year, datum.difficulty, datum.topic, session['username'],
-                           str(hashlib.sha256(datum.question.encode('utf-8')).hexdigest()), datum.title, datum.question,
+                           f"{hash}-{nonce}-{rand}", datum.title, datum.question,
                            'Error')
                 cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
                                f"'topic', 'username', 'file_name', 'title', 'contents', 'status') VALUES (?, "
@@ -222,6 +228,7 @@ def sign_up_data():
                 try:
                     sqlData = (userhash, data['username'])
                     database.execute(f"INSERT INTO User (userhash, username) VALUES (?, ?);", sqlData)
+                    session['username'] = data['username']
                     database.commit()
                     database.close()
                 except:
@@ -245,5 +252,13 @@ def sign_in():
 def sign_out():
     if 'username' in session: session.clear()
     return redirect("/")
+
+@app.route('/about', methods=['GET'])
+def about():
+    return render_template("about.html")
+
+@app.route('/help', methods=['GET'])
+def help():
+    return render_template("help.html")
 
 app.run(host="0.0.0.0", port=5003, debug=True)

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>About</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/stylesheet.css">
+</head>
+<body>
+   <div style="padding: 80px">
+       <h1 class="title" style="margin-bottom:50px">About</h1>
+        <h1 class="subtitle is-5">
+            This search engine is primarily meant for teachers to be able to upload their questions and query it later on for
+            purposes such as setting exam papers, giving students additional practice or to try the questions out themselves.
+            And due to the public nature of this search engine, students can also contribute and derive benefits from the questions
+            uploaded to this website.
+        </h1>
+        <h1 class="subtitle is-5">
+            The website accepts LaTeX as its primary file, and displays it 'almost' natively on the website. It uses a unique and
+            efficient pipeline to be able to convert the LaTeX files into 'almost' native elements of the website. An overview of
+            the pipeline would be following <b>(LaTeX --> PDF --> Cropped PDF --> HTML Canvas).</b> The website uses <b>pdflatex</b> in order to
+            convert LaTeX into PDF, this is done on the server. This PDF is then cropped using <b>pdfcrop</b> so that the resulting PDF is
+            less like a bunch of pages and more like a continuous stream of words. THe cropped pdf is then delivered to the client on
+            request where it is read by a library developed by Mozilla, known as <b>pdf.js</b> which reads the pdf and draws it into a HTML
+            canvas for the 'almost' native look and feel.
+        </h1>
+       <h1 class="subtitle is-5">
+            This website could only be developed thanks to contributions from my teachers and peers.
+           <b>Thanks to Mr Beer</b>, for giving me this idea.
+           <b>Thanks Mr Leong</b>, for teaching me the ways of creating a web server and also for assigning me this project.
+           And <b>thanks to all my friends</b>, who tried out the website and took your time to comment on it.
+        </h1>
+   </div>
+</body>
+</html>
