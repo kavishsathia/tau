@@ -8,20 +8,33 @@ app.secret_key = "computing"
 
 class Question():
     def __init__(self, l, index):
-        self.title = l[index].split(",")[0]
-        try:
-            year = int(l[index].split(",")[1])
-        except:
-            year = 0
-        self.year = year
-        self.difficulty = l[index].split(",")[2]
-        self.topic = l[index].split(",")[3]
-        self.question = l[index+1]
+        attributes = l[index].split(",")
+        if len(attributes) == 4:
+            self.title = attributes[0]
+            try:
+                year = int(attributes[1])
+            except:
+                year = 0
+            self.year = year
+            self.difficulty = attributes[2]
+            self.topic = attributes[3]
+            if index + 1 < len(l):
+                self.question = l[index + 1]
+            else:
+                raise Exception
+        else:
+            raise Exception
 
 def data_process(data):
     split_data = data.split("@qn@")
     split_data = [datum for datum in split_data if datum != ""]
-    return [Question(split_data, i) for i in range(0, len(split_data), 2)]
+    return_list = []
+    for i in range(0, len(split_data), 2):
+        try:
+            return_list.append(Question(split_data, i))
+        except:
+            pass
+    return return_list
 
 @app.route('/', methods=['GET'])
 def search_page():
@@ -32,51 +45,51 @@ def search_page():
 
 @app.route('/results', methods=['POST'])
 def results_page():
-    if 'username' in session:
-        search = request.form['search'].strip().split(" ")
+    search = request.form['search'].strip().split(" ")
 
-        # parsing
-        sql_string = "SELECT * from Question WHERE status = 'Success' AND "
-        data = ()
-        query = ""
-        substring = 0
-        while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
-            query = query + search[substring] + " "
-            substring += 1
-        sql_string = sql_string + "contents LIKE ? AND "
-        data = data + ("%" + query.strip() + "%",)
-        register = ""
-        for i in range(0, len(search)):
-            if search[i] in ["-t", "-d", "-y"]:
-                register = search[i]
-            elif register == "-t":
-                data = data + ("%" + search[i] + "%",)
-                sql_string = sql_string + "topic LIKE ? AND "
-            elif register == "-d":
-                data = data + ("%" + search[i] + "%",)
-                sql_string = sql_string + "difficulty LIKE ? AND "
-            elif register == "-y":
-                try:
-                    year = int(search[i])
-                except:
-                    year = 0
-                data = data + (year,)
-                sql_string = sql_string + "year = ? AND "
+    # parsing
+    sql_string = "SELECT * from Question WHERE status = 'Success' AND "
+    data = ()
+    query = ""
+    substring = 0
+    while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
+        query = query + search[substring] + " "
+        substring += 1
+    sql_string = sql_string + "contents LIKE ? AND "
+    data = data + ("%" + query.strip() + "%",)
+    register = ""
+    for i in range(0, len(search)):
+        if search[i] in ["-t", "-d", "-y"]:
+            register = search[i]
+        elif register == "-t":
+            data = data + ("%" + search[i] + "%",)
+            sql_string = sql_string + "topic LIKE ? AND "
+        elif register == "-d":
+            data = data + ("%" + search[i] + "%",)
+            sql_string = sql_string + "difficulty LIKE ? AND "
+        elif register == "-y":
+            try:
+                year = int(search[i])
+            except:
+                year = 0
+            data = data + (year,)
+            sql_string = sql_string + "year = ? AND "
 
         # finding
-        database = sqlite3.connect('questions.db')
-        cursor = database.cursor()
-        try:
-            cursor.execute(sql_string[:-4], data)
-            return_data = cursor.fetchall()
-        except:
-            return redirect("/error")
-        finally:
-            database.close()
+    database = sqlite3.connect('questions.db')
+    cursor = database.cursor()
+    try:
+        cursor.execute(sql_string[:-4], data)
+        return_data = cursor.fetchall()
+        database.close()
+    except:
+        database.close()
+        return redirect("/error")
 
+    if 'username' in session:
         return render_template('results.html', data=(return_data, session['username']))
     else:
-        return render_template('results.html', data=([], ""))
+        return render_template('results.html', data=(return_data, ""))
 
 @app.route('/contributions', methods=['GET'])
 def contributions():
@@ -104,6 +117,8 @@ def error():
 
 @app.route('/delete', methods=['POST'])
 def delete():
+    if 'username' not in session:
+        return redirect("/sign_in")
     id = request.form.get("delete")
     database = sqlite3.connect('questions.db')
     sql_data = (id,session['username'])
@@ -137,6 +152,8 @@ def upload_page():
 
 @app.route('/upload_data', methods=['POST'])
 def upload_data():
+    if 'username' not in session:
+        return redirect("/sign_in")
     contents = str(request.files['file'].read(), 'utf-8')
     data = data_process(contents)
     for datum in data:
@@ -163,6 +180,7 @@ def upload_data():
                                f"?, ?, ?, ?, ?, ?, ?);", sql_data)
             database.commit()
         finally:
+            # we don't redirect to the error page here because the server will just choose to ignore faulty entry that causes the SQL to malfunction (quite rare)
             database.close()
     return redirect("/contributions")
 
@@ -173,9 +191,10 @@ def get_token():
     try:
         sqlData = (data['username'],)
         user = database.execute(f"SELECT * FROM User WHERE username = ?", sqlData).fetchone()
-    finally:
-        database.commit()
         database.close()
+    except:
+        database.close()
+        return redirect("/error")
     userauth = data['username'] + data['password']
     userhash = str(hashlib.sha256(userauth.encode('utf-8')).hexdigest())
     if user is not None and user[0] == userhash:
@@ -203,11 +222,14 @@ def sign_up_data():
                 try:
                     sqlData = (userhash, data['username'])
                     database.execute(f"INSERT INTO User (userhash, username) VALUES (?, ?);", sqlData)
-                finally:
                     database.commit()
                     database.close()
-        except:
-            pass
+                except:
+                    database.close()
+                    return redirect("/error")
+        except
+            database.close()
+            return redirect("/error")
     return redirect("/")
 
 
@@ -223,6 +245,5 @@ def sign_in():
 def sign_out():
     if 'username' in session: session.clear()
     return redirect("/")
-
 
 app.run(host="0.0.0.0", port=5003, debug=True)
