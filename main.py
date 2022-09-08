@@ -141,7 +141,7 @@ def delete():
         if exists(f"static/{filename[0]}.aux"): remove(f"static/{filename[0]}.aux")
         if exists(f"static/{filename[0]}.log"): remove(f"static/{filename[0]}.log")
         if exists(f"static/{filename[0]}.pdf"): remove(f"static/{filename[0]}.pdf")
-        if exists(f"static/{filename[0]}-crop.pdf"): remove(f"static/{filename[0]}.pdf")
+        if exists(f"static/{filename[0]}-crop.pdf"): remove(f"static/{filename[0]}-crop.pdf")
         if exists(f"static/{filename[0]}.tex"): remove(f"static/{filename[0]}.tex")
     return redirect("/contributions")
 
