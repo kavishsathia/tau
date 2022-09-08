@@ -150,7 +150,6 @@ def upload_page():
 
 @app.route('/upload_data', methods=['POST'])
 def upload_data():
-
     if 'username' not in session:
         return redirect("/sign_in")
     contents = str(request.files['file'].read(), 'utf-8')
