@@ -61,11 +61,11 @@
             </div>
         {% endif %}
 </div>
-{% for hash in data[0] %}
+{% for item in data[0] %}
     <div class="center">
-        {% if hash[7] == "Success" %}
+        {% if item[7] == "Success" %}
             <script>
-            url = '/static/{{ hash[5] }}-crop.pdf';
+            url = '/static/{{ item[5] }}-crop.pdf';
             var thePdf = null;
             var scale = 5;
 
@@ -77,7 +77,7 @@
 
             pdfjsLib.getDocument(url).promise.then(function(pdf) {
                 thePdf = pdf;
-                viewer = document.getElementById('{{ hash[5] }}');
+                viewer = document.getElementById('{{ item[5] }}');
                 for(page = 1; page <= pdf.numPages; page++) {
                   canvas = document.createElement("canvas");
                   canvas.className = 'pdf-page-canvas';
@@ -101,32 +101,32 @@
             <div class="title-margin">
                 <div class="start-error">
                     <h1 class="title is-4">truncateString("{{ item[6] }}", 12)</h1>
-                    {% if hash[7] == "Error" %}
-                    <h1 class="laptop subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
-                    <h1 class="mobile subtitle is-7">There was an error in the compilation of your TeX file. <a href="/static/{{ hash[5] }}.log">View the logs.</a></h1>
+                    {% if item[7] == "Error" %}
+                    <h1 class="laptop subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ item[5] }}.log">View the logs.</a></h1>
+                    <h1 class="mobile subtitle is-7">There was an error in the compilation of your TeX file. <a href="/static/{{ item[5] }}.log">View the logs.</a></h1>
                     {% else %}
                     <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2] }} | truncateString("{{ item[3] }}", 10)</h2>
                     {% endif %}
                 </div>
                 <div class="laptop end">
                     <form action="/delete" method="POST" class="icon-margin laptop">
-                        <button class="laptop button is-danger is-light" name="delete" value="{{ hash[0] }}">Delete</button>
+                        <button class="laptop button is-danger is-light" name="delete" value="{{ item[0] }}">Delete</button>
                     </form>
-                    <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex">
+                    <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ item[5] }}.tex">
                         <button class="laptop button is-dark ">Open in Overleaf</button>
                     </a>
                 </div>
                 <div class="end">
                     <form action="/delete" method="POST" class="icon-margin mobile">
-                        <button class="button is-danger is-light is-small" name="delete" value="{{ hash[0] }}">Delete</button>
+                        <button class="button is-danger is-light is-small" name="delete" value="{{ item[0] }}">Delete</button>
                     </form>
-                    <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ hash[5] }}.tex">
+                    <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ item[5] }}.tex">
                         <button class="mobile button is-dark is-small">Open in Overleaf</button>
                     </a>
                 </div>
             </div>
-            {% if hash[7] == "Success" %}
-            <div id='{{ hash[5] }}' class="pdf-viewer"></div>
+            {% if item[7] == "Success" %}
+            <div id='{{ item[5] }}' class="pdf-viewer"></div>
             {% else %}
             {% endif %}
         </div>
