@@ -10,15 +10,14 @@ app.secret_key = "computing"
 class Question():
     def __init__(self, l, index):
         attributes = l[index].split(",")
-        if len(attributes) == 4:
+        if len(attributes) == 3:
             self.title = attributes[0]
             try:
                 year = int(attributes[1])
             except:
                 year = 0
             self.year = year
-            self.difficulty = attributes[2] if attributes[2] in ["H", "M", "E"] else "M"
-            self.topic = attributes[3]
+            self.topic = attributes[2]
             if index + 1 < len(l):
                 self.question = l[index + 1]
             else:
@@ -60,14 +59,11 @@ def results_page():
     data = data + ("%" + query.strip() + "%",)
     register = ""
     for i in range(0, len(search)):
-        if search[i] in ["-t", "-d", "-y"]:
+        if search[i] in ["-t", "-y"]:
             register = search[i]
         elif register == "-t":
             data = data + ("%" + search[i] + "%",)
             sql_string = sql_string + "topic LIKE ? AND "
-        elif register == "-d":
-            data = data + (search[i],)
-            sql_string = sql_string + "difficulty = ? AND "
         elif register == "-y":
             try:
                 year = int(search[i])
@@ -173,17 +169,17 @@ def upload_data():
         cursor = database.cursor()
         try:
             if exists(f"static/{hash}-{nonce}-{rand}-crop.pdf"):
-                sql_data = (datum.year, datum.difficulty, datum.topic, session['username'], f"{hash}-{nonce}-{rand}", datum.title, datum.question, 'Success')
-                cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
+                sql_data = (datum.year, datum.topic, session['username'], f"{hash}-{nonce}-{rand}", datum.title, datum.question, 'Success')
+                cursor.execute(f"INSERT INTO Question ('year', "
                                f"'topic', 'username', 'file_name', 'title', 'contents', 'status') VALUES (?, "
-                               f"?, ?, ?, ?, ?, ?, ?);", sql_data)
+                               f"?, ?, ?, ?, ?, ?);", sql_data)
             else:
-                sql_data = (datum.year, datum.difficulty, datum.topic, session['username'],
+                sql_data = (datum.year, datum.topic, session['username'],
                            f"{hash}-{nonce}-{rand}", datum.title, datum.question,
                            'Error')
-                cursor.execute(f"INSERT INTO Question ('year', 'difficulty', "
+                cursor.execute(f"INSERT INTO Question ('year', "
                                f"'topic', 'username', 'file_name', 'title', 'contents', 'status') VALUES (?, "
-                               f"?, ?, ?, ?, ?, ?, ?);", sql_data)
+                               f"?, ?, ?, ?, ?, ?);", sql_data)
             database.commit()
         finally:
             # we don't redirect to the error page here because the server will just choose to ignore faulty entry that causes the SQL to malfunction (quite rare)

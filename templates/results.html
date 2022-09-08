@@ -60,7 +60,7 @@
                 <img src="/static/tau2.png" width=100px height=100px class="laptop">
                 <img src="/static/tau2.png" width=85px height=85px class="mobile">
             </div>
-            <input class="input search-margin" type="text" name="search" placeholder="{query} -t {topic} -d {difficulty H/M/E} -y {year}">
+            <input class="input search-margin" type="text" name="search" placeholder="{query} -t {topic} -y {year}">
         </form>
     </div>
 
@@ -107,9 +107,9 @@
 
         <div class="grid">
             <div class="title-margin">
-                <div class="start">
-                    <h1 class="title is-4">{{ item[6]|truncate(12, True) }}</h1>
-                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2] }} | {{ item[3]|truncate(10, True) }}</h2>
+                <div class="start-error">
+                    <h1 class="title is-4">{{ item[6]|truncate(15, True) }}</h1>
+                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2]|truncate(15, True) }}</h2>
                 </div>
                 <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ item[5] }}.tex" class="end">
                     <button class="laptop button is-dark ">Open in Overleaf</button>

@@ -100,12 +100,12 @@
         <div class="grid">
             <div class="title-margin">
                 <div class="start-error">
-                    <h1 class="title is-4">{{ item[6]|truncate(12, True) }}</h1>
+                    <h1 class="title is-4">{{ item[6]|truncate(15, True) }}</h1>
                     {% if item[7] == "Error" %}
                     <h1 class="laptop subtitle is-6">There was an error in the compilation of your TeX file. <a href="/static/{{ item[5] }}.log">View the logs.</a></h1>
                     <h1 class="mobile subtitle is-7">There was an error in the compilation of your TeX file. <a href="/static/{{ item[5] }}.log">View the logs.</a></h1>
                     {% else %}
-                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2] }} | {{ item[3]|truncate(10, True) }}</h2>
+                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[3]|truncate(15, True) }}</h2>
                     {% endif %}
                 </div>
                 <div class="laptop end">
