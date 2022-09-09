@@ -22,6 +22,7 @@
     <div class="start">
        <a href="/about"><button class="button is-white">About</button></a>
         <a href="/help"><button class="button is-white">Help</button></a>
+        <a href="/"><button class="button is-white">Search</button></a>
     </div>
         {% if data[1] == "" %}
             <a href="/sign_in" class="end">
@@ -109,7 +110,7 @@
             <div class="title-margin">
                 <div class="start-error">
                     <h1 class="title is-4">{{ item[5]|truncate(15, True) }}</h1>
-                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2]|truncate(15, True) }}</h2>
+                    <h2 class="subtitle is-6">{{ item[1] }} | {{ item[2]|truncate(12, True) }}</h2>
                 </div>
                 <a href="https://www.overleaf.com/docs?snip_uri=http://ec2-54-169-42-44.ap-southeast-1.compute.amazonaws.com:5003/static/{{ item[5] }}.tex" class="end">
                     <button class="laptop button is-dark ">Open in Overleaf</button>
