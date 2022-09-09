@@ -217,7 +217,7 @@ def sign_up_data():
         try:
             sqlData = (data['username'],)
             user = database.execute(f"SELECT * FROM User WHERE username = ?;", sqlData).fetchone()
-            if user is not None:
+            if user is not None or data['username'] == "":
                 return render_template("sign_up.html", data=("Use a different username",))
             else:
                 try:
