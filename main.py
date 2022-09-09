@@ -43,30 +43,31 @@ def search_page():
     else:
         return render_template('index.html', data="")
 
-@app.route('/results', methods=['POST', 'GET'])
+@app.route('/results', methods=['POST'])
 def results_page():
-    search = request.form['search'].strip().split(" ")
+    search = request.form['search']
+    search_arr = search.strip().split(" ")
 
     # parsing
     sql_string = "SELECT * from Question WHERE status = 'Success' AND "
     data = ()
     query = ""
     substring = 0
-    while substring < len(search) and search[substring] not in ["-t", "-d", "-y"]:
-        query = query + search[substring] + " "
+    while substring < len(search_arr) and search_arr[substring] not in ["-t", "-d", "-y"]:
+        query = query + search_arr[substring] + " "
         substring += 1
     sql_string = sql_string + "contents LIKE ? AND "
     data = data + ("%" + query.strip() + "%",)
     register = ""
-    for i in range(0, len(search)):
-        if search[i] in ["-t", "-y"]:
-            register = search[i]
+    for i in range(0, len(search_arr)):
+        if search_arr[i] in ["-t", "-y"]:
+            register = search_arr[i]
         elif register == "-t":
-            data = data + ("%" + search[i] + "%",)
+            data = data + ("%" + search_arr[i] + "%",)
             sql_string = sql_string + "topic LIKE ? AND "
         elif register == "-y":
             try:
-                year = int(search[i])
+                year = int(search_arr[i])
             except:
                 year = 0
             data = data + (year,)
@@ -84,9 +85,9 @@ def results_page():
         return redirect("/error")
 
     if 'username' in session:
-        return render_template('results.html', data=(return_data, session['username']))
+        return render_template('results.html', data=(return_data, session['username'], search))
     else:
-        return render_template('results.html', data=(return_data, ""))
+        return render_template('results.html', data=(return_data, "", search))
 
 @app.route('/contributions', methods=['GET'])
 def contributions():
