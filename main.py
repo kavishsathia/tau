@@ -43,7 +43,7 @@ def search_page():
     else:
         return render_template('index.html', data="")
 
-@app.route('/results', methods=['POST'])
+@app.route('/results', methods=['POST', 'GET'])
 def results_page():
     search = request.form['search'].strip().split(" ")
 
